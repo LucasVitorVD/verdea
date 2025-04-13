@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { soDoSans } from "@/lib/fonts";
 import "./globals.css";
+import Header from "@/components/header/Header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,10 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body
-        className={`${soDoSans.className} antialiased`}
-      >
-        {children}
+      <body className={`${soDoSans.className} antialiased`}>
+        <div className="flex flex-col min-h-screen">
+          <Header />
+          <main>{children}</main>
+        </div>
       </body>
     </html>
   );

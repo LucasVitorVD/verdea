@@ -1,0 +1,78 @@
+"use client";
+
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import Link from "next/link";
+import { Menu } from "lucide-react";
+import { navigationItems } from "@/lib/navigation";
+import { useState } from "react";
+
+export default function MobileNavigation() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger className="lg:hidden">
+        <Menu className="text-primary" />
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <NavigationMenu className="py-12">
+            <NavigationMenuList className="flex flex-col items-start">
+              {navigationItems.map((navigation) => (
+                <NavigationMenuItem key={navigation.href}>
+                  <Link
+                    href={navigation.href}
+                    passHref
+                    onClick={() => setOpen(false)}
+                  >
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      {navigation.title}
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              ))}
+              <NavigationMenuItem>
+                <Link
+                  href="/login"
+                  passHref
+                  className="underline"
+                  onClick={() => setOpen(false)}
+                >
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Entrar
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Link
+                  href="/register"
+                  passHref
+                  className="underline text-primary"
+                  onClick={() => setOpen(false)}
+                >
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    Cadastrar
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </SheetHeader>
+      </SheetContent>
+    </Sheet>
+  );
+}

@@ -1,10 +1,30 @@
-import { Button } from "@/components/ui/button";
+const items = [
+  {
+    title: "Home",
+    url: "#",
+  },
+  {
+    title: "Inbox",
+    url: "#",
+  },
+  {
+    title: "Calendar",
+    url: "#",
+  },
+  {
+    title: "Search",
+    url: "#",
+  },
+  {
+    title: "Settings",
+    url: "#",
+  },
+]
 
 export default function Home() {
   return (
-    <div className="container">
-      <h1>Hello</h1>
-      <Button>Click</Button>
+    <div>
+      <h1>Hello page</h1>
     </div>
   );
 }
