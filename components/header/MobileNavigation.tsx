@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { navigationItems } from "@/lib/navigation";
+import { buttonVariants } from "@/components/ui/button"
 import { useState } from "react";
 
 export default function MobileNavigation() {
@@ -49,24 +50,10 @@ export default function MobileNavigation() {
                 <Link
                   href="/login"
                   passHref
-                  className="underline"
+                  className={`${buttonVariants()} underline`}
                   onClick={() => setOpen(false)}
                 >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Entrar
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link
-                  href="/register"
-                  passHref
-                  className="underline text-primary"
-                  onClick={() => setOpen(false)}
-                >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Cadastrar
-                  </NavigationMenuLink>
+                  Entrar
                 </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
