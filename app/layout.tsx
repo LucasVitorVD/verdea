@@ -18,7 +18,7 @@ export default function RootLayout({
       <body className={`${soDoSans.className} antialiased`}>
         <div className="flex flex-col min-h-screen">
           <Header />
-          <main>{children}</main>
+          <main className="flex flex-col flex-1">{children}</main>
         </div>
       </body>
     </html>
