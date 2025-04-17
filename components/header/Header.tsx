@@ -7,9 +7,9 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Button } from "../ui/button";
 import { navigationItems } from "@/lib/navigation";
 import MobileNavigation from "./MobileNavigation";
+import { buttonVariants } from "@/components/ui/button"
 
 export default function Header() {
   return (
@@ -35,10 +35,7 @@ export default function Header() {
 
       <div className="flex items-center gap-12">
         <div className="space-x-4 hidden lg:block">
-          <Button variant="outline" className="cursor-pointer">
-            Entrar
-          </Button>
-          <Button className="cursor-pointer">Cadastrar</Button>
+          <Link href="/login" className={buttonVariants()}>Entrar</Link>
         </div>
 
         <MobileNavigation />
