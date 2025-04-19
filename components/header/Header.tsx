@@ -13,7 +13,7 @@ import { buttonVariants } from "@/components/ui/button"
 
 export default function Header() {
   return (
-    <header className="flex justify-between px-8 py-6 sticky top-0">
+    <header className="flex justify-between px-8 py-6 sticky top-0 bg-white/80 backdrop-blur-lg z-50">
       <Link href="/" className="flex items-center gap-1.5">
         <Droplet className="h-6 w-6 text-primary" />
         <span className="text-xl font-bold">Verdea</span>
@@ -24,7 +24,7 @@ export default function Header() {
           {navigationItems.map((navigation) => (
             <NavigationMenuItem key={navigation.href}>
               <Link href={navigation.href} passHref>
-                <NavigationMenuLink className={`${navigationMenuTriggerStyle()} hover:text-primary`}>
+                <NavigationMenuLink className="hover:text-primary">
                   {navigation.title}
                 </NavigationMenuLink>
               </Link>
