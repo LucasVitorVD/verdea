@@ -111,7 +111,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex flex-col items-center gap-10 py-15 px-4">
+      <section className="flex flex-col items-center gap-10 py-15 px-6">
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">Funcionalidades principais</h2>
           <p className="text-xl text-muted-foreground max-w-2xl">
@@ -130,12 +130,69 @@ export default function Home() {
                 <CardTitle className="text-xl">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">
-                  {feature.description}
-                </p>
+                <p className="text-muted-foreground">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
+        </div>
+      </section>
+
+      <section className="flex flex-col items-center gap-10 py-15 px-6 bg-primary/10">
+        <div className="text-center space-y-4">
+          <h2 className="text-3xl font-bold">Como Funciona</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl">
+            Em apenas três passos simples, você pode começar a cuidar melhor das
+            suas plantas.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 container">
+          <Card className="flex flex-col gap-4 relative">
+            <CardHeader className="space-y-2">
+              <div className="flex items-center justify-center bg-primary rounded-full size-12 absolute -top-3 -left-4">
+                <span className="text-white text-xl">1</span>
+              </div>
+              <CardTitle className="text-xl mt-6">
+                Conecte o Dispositivo
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Conecte o dispositivo ESP32 à sua rede Wi-Fi e ao sistema de
+                irrigação.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="flex flex-col gap-4 relative">
+            <CardHeader className="space-y-2">
+              <div className="flex items-center justify-center bg-primary rounded-full size-12 absolute -top-3 -left-4">
+                <span className="text-white text-xl">2</span>
+              </div>
+              <CardTitle className="text-xl mt-6">
+                Cadastre suas Plantas
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Adicione suas plantas ao sistema, informando espécie e
+                localização.
+              </p>
+            </CardContent>
+          </Card>
+          <Card className="flex flex-col gap-4 relative">
+            <CardHeader className="space-y-2">
+              <div className="flex items-center justify-center bg-primary rounded-full size-12 absolute -top-3 -left-4">
+                <span className="text-white text-xl">3</span>
+              </div>
+              <CardTitle className="text-xl mt-6">Configure e Relaxe</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Defina as preferências de irrigação e deixe o PlantCare cuidar
+                do resto.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </>
