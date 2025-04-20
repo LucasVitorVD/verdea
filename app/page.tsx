@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   ArrowRight,
   Check,
@@ -10,14 +10,7 @@ import {
   Zap,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import Image from "next/image";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
+import Esp32Model from "@/components/3dModel/Esp32Model";
 
 const featuresCards = [
   {
@@ -196,8 +189,8 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Defina as preferências de irrigação e deixe o Verdea cuidar
-                do resto.
+                Defina as preferências de irrigação e deixe o Verdea cuidar do
+                resto.
               </p>
             </CardContent>
           </Card>
@@ -211,19 +204,13 @@ export default function Home() {
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">Hardware Compatível</h2>
           <p className="text-xl text-muted-foreground max-w-2xl">
-            O Verdea funciona com dispositivos ESP32 para monitorar e
-            controlar a irrigação das suas plantas.
+            O Verdea funciona com dispositivos ESP32 para monitorar e controlar
+            a irrigação das suas plantas.
           </p>
         </div>
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <figure>
-              <img
-                src="/esp32.png"
-                alt="ESP32 Device"
-                className="rounded-xl shadow-lg border dark:border-plant/20 mx-auto"
-              />
-            </figure>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 items-center">
+            <Esp32Model />
             <div className="space-y-6">
               <div className="space-y-2">
                 <h3 className="text-2xl font-bold">
@@ -290,7 +277,14 @@ export default function Home() {
                 </div>
               </div>
 
-              <Button className="mt-4">Saiba Mais Sobre o Hardware</Button>
+              <Link
+                href="https://www.espressif.com/en/products/socs/esp32"
+                rel="external"
+                target="_blank"
+                className={`${buttonVariants()} mt-4`}
+              >
+                Saiba Mais Sobre o Hardware
+              </Link>
             </div>
           </div>
         </div>

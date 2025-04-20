@@ -1,0 +1,11 @@
+Model Information:
+* title:	ESP32 WROOM 32 - Low Poly Photorealistic
+* source:	https://sketchfab.com/3d-models/esp32-wroom-32-low-poly-photorealistic-af0851c326ef4cbaa42439f801acbe98
+* author:	wojteX (https://sketchfab.com/wojteX)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "ESP32 WROOM 32 - Low Poly Photorealistic" (https://sketchfab.com/3d-models/esp32-wroom-32-low-poly-photorealistic-af0851c326ef4cbaa42439f801acbe98) by wojteX (https://sketchfab.com/wojteX) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
