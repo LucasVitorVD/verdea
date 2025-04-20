@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   ArrowRight,
   Check,
@@ -10,6 +10,14 @@ import {
   Zap,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 const featuresCards = [
   {
@@ -74,7 +82,7 @@ export default function Home() {
                 Cuide das suas plantas de forma inteligente
               </h1>
               <p className="text-xl md:text-2xl mb-8 text-white/90">
-                O PlantCare é um sistema de irrigação automática que monitora e
+                O Verdea é um sistema de irrigação automática que monitora e
                 cuida das suas plantas quando você não pode.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -188,11 +196,103 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Defina as preferências de irrigação e deixe o PlantCare cuidar
+                Defina as preferências de irrigação e deixe o Verdea cuidar
                 do resto.
               </p>
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      <section
+        id="hardware"
+        className="flex flex-col items-center gap-10 py-15 px-6"
+      >
+        <div className="text-center space-y-4">
+          <h2 className="text-3xl font-bold">Hardware Compatível</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl">
+            O Verdea funciona com dispositivos ESP32 para monitorar e
+            controlar a irrigação das suas plantas.
+          </p>
+        </div>
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <figure>
+              <img
+                src="/esp32.png"
+                alt="ESP32 Device"
+                className="rounded-xl shadow-lg border dark:border-plant/20 mx-auto"
+              />
+            </figure>
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-2xl font-bold">
+                  ESP32 - Compacto e Poderoso
+                </h3>
+                <p className="text-muted-foreground">
+                  O ESP32 é um microcontrolador de baixo custo e baixo consumo
+                  de energia, perfeito para projetos de IoT como o Verdea.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="h-6 w-6 rounded-full dark:bg-plant-dark/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="size-3.5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium">
+                      Wi-Fi e Bluetooth Integrados
+                    </h4>
+                    <p className="text-sm text-muted-foreground">
+                      Conecte-se facilmente à sua rede doméstica sem fios
+                      adicionais.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="size-6 rounded-full dark:bg-plant-dark/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="size-3.5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium">Sensores de Umidade</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Monitore com precisão a umidade do solo das suas plantas.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="h-6 w-6 rounded-full dark:bg-plant-dark/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="size-3.5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium">Controle de Válvulas</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Controle válvulas solenoides para irrigação automática
+                      precisa.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="h-6 w-6 rounded-full dark:bg-plant-dark/30 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="size-3.5 text-primary" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium">Baixo Consumo de Energia</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Funciona com baterias ou energia solar para instalação em
+                      qualquer lugar.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <Button className="mt-4">Saiba Mais Sobre o Hardware</Button>
+            </div>
+          </div>
         </div>
       </section>
     </>
