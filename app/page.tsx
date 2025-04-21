@@ -328,17 +328,6 @@ export default function Home() {
 
             <AccordionItem value="item-2">
               <AccordionTrigger className="text-left text-xl font-medium">
-                Quantas plantas posso monitorar com um dispositivo?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                Cada dispositivo ESP32 pode monitorar até 8 plantas diferentes,
-                dependendo da configuração. Você pode adicionar mais
-                dispositivos para expandir seu sistema.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="item-3">
-              <AccordionTrigger className="text-left text-xl font-medium">
                 O Verdea funciona com qualquer tipo de planta?
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
@@ -348,7 +337,7 @@ export default function Home() {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="item-4">
+            <AccordionItem value="item-3">
               <AccordionTrigger className="text-left text-xl font-medium">
                 Posso controlar o Verdea quando estiver fora de casa?
               </AccordionTrigger>
@@ -359,7 +348,7 @@ export default function Home() {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="item-5">
+            <AccordionItem value="item-4">
               <AccordionTrigger className="text-left text-xl font-medium">
                 Como o sistema de IA gera dicas personalizadas?
               </AccordionTrigger>
@@ -370,7 +359,7 @@ export default function Home() {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="item-6">
+            <AccordionItem value="item-5">
               <AccordionTrigger className="text-left text-xl font-medium">
                 O Verdea é difícil de instalar?
               </AccordionTrigger>

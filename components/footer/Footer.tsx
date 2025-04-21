@@ -63,12 +63,6 @@ export default function Footer() {
             >
               Termos de serviço
             </Link>
-            <Link
-              href="/politica"
-              className="text-muted-foreground block hover:underline"
-            >
-              Política de privacidade
-            </Link>
             <Dialog>
               <DialogTrigger className="text-muted-foreground hover:underline cursor-pointer">
                 Cookies
