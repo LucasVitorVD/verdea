@@ -118,7 +118,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex flex-col items-center gap-10 py-15 px-6">
+      <section
+        className="flex flex-col items-center gap-10 py-15 px-6"
+        id="funcionalidades"
+      >
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">Funcionalidades principais</h2>
           <p className="text-xl text-muted-foreground max-w-2xl">
@@ -144,7 +147,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="flex flex-col items-center gap-10 py-15 px-6 bg-primary/10">
+      <section
+        className="flex flex-col items-center gap-10 py-15 px-6 bg-primary/10"
+        id="como-funciona"
+      >
         <div className="text-center space-y-4">
           <h2 className="text-3xl font-bold">Como Funciona</h2>
           <p className="text-xl text-muted-foreground max-w-2xl">
@@ -296,12 +302,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section
-        id="faq"
-        className="space-y-10 py-15 px-6 bg-primary/10"
-      >
+      <section id="faq" className="space-y-10 py-15 px-6 bg-primary/10">
         <div className="flex flex-col items-center gap-4">
-          <h2 className="text-center text-3xl font-bold">Perguntas Frequentes</h2>
+          <h2 className="text-center text-3xl font-bold">
+            Perguntas Frequentes
+          </h2>
           <p className="text-center text-xl text-muted-foreground max-w-2xl">
             Tire suas dúvidas sobre o Verdea e como ele pode ajudar você a
             cuidar melhor das suas plantas.
@@ -377,6 +382,23 @@ export default function Home() {
             </AccordionItem>
           </Accordion>
         </div>
+      </section>
+
+      <section className="flex flex-col items-center gap-10 py-15 px-6 bg-primary">
+        <div className="text-center space-y-4 text-white">
+          <h2 className="text-3xl font-bold">
+            Pronto para Revolucionar o Cuidado com suas Plantas?
+          </h2>
+          <p className="text-xl max-w-2xl">
+            Junte-se a milhares de pessoas que já estão usando o Verdea para
+            cuidar melhor de suas plantas.
+          </p>
+        </div>
+
+        <Link href="/register" className={buttonVariants({ size: "lg", variant: "outline" })}>
+          Começar Gratuitamente
+          <ArrowRight />
+        </Link>
       </section>
     </>
   );
