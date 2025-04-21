@@ -317,10 +317,10 @@ export default function Home() {
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="item-1">
               <AccordionTrigger className="text-left text-xl font-medium">
-                Preciso ter conhecimentos técnicos para usar o PlantCare?
+                Preciso ter conhecimentos técnicos para usar o Verdea?
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
-                Não! O PlantCare foi projetado para ser fácil de configurar e
+                Não! O Verdea foi projetado para ser fácil de configurar e
                 usar. Nosso guia passo a passo torna a instalação simples, mesmo
                 para quem não tem experiência técnica.
               </AccordionContent>
@@ -339,10 +339,10 @@ export default function Home() {
 
             <AccordionItem value="item-3">
               <AccordionTrigger className="text-left text-xl font-medium">
-                O PlantCare funciona com qualquer tipo de planta?
+                O Verdea funciona com qualquer tipo de planta?
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
-                Sim! O PlantCare é compatível com qualquer tipo de planta. Nosso
+                Sim! O Verdea é compatível com qualquer tipo de planta. Nosso
                 sistema permite configurar parâmetros específicos para cada
                 espécie, garantindo cuidados adequados.
               </AccordionContent>
@@ -350,10 +350,10 @@ export default function Home() {
 
             <AccordionItem value="item-4">
               <AccordionTrigger className="text-left text-xl font-medium">
-                Posso controlar o PlantCare quando estiver fora de casa?
+                Posso controlar o Verdea quando estiver fora de casa?
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
-                Absolutamente! O PlantCare é acessível de qualquer lugar através
+                Absolutamente! O Verdea é acessível de qualquer lugar através
                 do nosso aplicativo web. Você pode monitorar e controlar suas
                 plantas mesmo durante viagens.
               </AccordionContent>
@@ -372,7 +372,7 @@ export default function Home() {
 
             <AccordionItem value="item-6">
               <AccordionTrigger className="text-left text-xl font-medium">
-                O PlantCare é difícil de instalar?
+                O Verdea é difícil de instalar?
               </AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
                 A instalação é simples e leva apenas alguns minutos. Conecte o

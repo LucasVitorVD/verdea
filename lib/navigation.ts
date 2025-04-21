@@ -1,5 +1,9 @@
 export const navigationItems: { title: string; href: string }[] = [
   {
+    title: "Início",
+    href: "/",
+  },
+  {
     title: "Funcionalidades",
     href: "#funcionalidades",
   },
