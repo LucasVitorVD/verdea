@@ -10,6 +10,12 @@ import {
   Zap,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import Esp32Model from "@/components/3dModel/Esp32Model";
 
 const featuresCards = [
@@ -287,6 +293,89 @@ export default function Home() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section
+        id="faq"
+        className="space-y-10 py-15 px-6 bg-primary/10"
+      >
+        <div className="flex flex-col items-center gap-4">
+          <h2 className="text-center text-3xl font-bold">Perguntas Frequentes</h2>
+          <p className="text-center text-xl text-muted-foreground max-w-2xl">
+            Tire suas dúvidas sobre o Verdea e como ele pode ajudar você a
+            cuidar melhor das suas plantas.
+          </p>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="item-1">
+              <AccordionTrigger className="text-left text-xl font-medium">
+                Preciso ter conhecimentos técnicos para usar o PlantCare?
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Não! O PlantCare foi projetado para ser fácil de configurar e
+                usar. Nosso guia passo a passo torna a instalação simples, mesmo
+                para quem não tem experiência técnica.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-2">
+              <AccordionTrigger className="text-left text-xl font-medium">
+                Quantas plantas posso monitorar com um dispositivo?
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Cada dispositivo ESP32 pode monitorar até 8 plantas diferentes,
+                dependendo da configuração. Você pode adicionar mais
+                dispositivos para expandir seu sistema.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-3">
+              <AccordionTrigger className="text-left text-xl font-medium">
+                O PlantCare funciona com qualquer tipo de planta?
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Sim! O PlantCare é compatível com qualquer tipo de planta. Nosso
+                sistema permite configurar parâmetros específicos para cada
+                espécie, garantindo cuidados adequados.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-4">
+              <AccordionTrigger className="text-left text-xl font-medium">
+                Posso controlar o PlantCare quando estiver fora de casa?
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Absolutamente! O PlantCare é acessível de qualquer lugar através
+                do nosso aplicativo web. Você pode monitorar e controlar suas
+                plantas mesmo durante viagens.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-5">
+              <AccordionTrigger className="text-left text-xl font-medium">
+                Como o sistema de IA gera dicas personalizadas?
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                Nossa IA analisa dados de umidade, temperatura e histórico de
+                irrigação, combinando com informações específicas sobre cada
+                espécie para gerar recomendações precisas.
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="item-6">
+              <AccordionTrigger className="text-left text-xl font-medium">
+                O PlantCare é difícil de instalar?
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                A instalação é simples e leva apenas alguns minutos. Conecte o
+                dispositivo à sua rede Wi-Fi, configure no aplicativo e conecte
+                ao seu sistema de irrigação.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </section>
     </>
