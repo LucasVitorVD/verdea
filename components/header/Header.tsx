@@ -34,7 +34,7 @@ export default function Header() {
 
       <div className="flex items-center gap-12">
         <div className="space-x-4 hidden lg:block">
-          <Link href="/login" className={buttonVariants()}>Entrar</Link>
+          <Link href="/register?tab=login" className={buttonVariants()}>Entrar</Link>
         </div>
 
         <MobileNavigation />

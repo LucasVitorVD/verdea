@@ -8,7 +8,7 @@ export default function LandingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <header className="flex justify-between px-8 py-6 sticky top-0 bg-white/80 backdrop-blur-lg z-50">
         <Link href="/" className="flex items-center gap-1.5">
           <Droplet className="h-6 w-6 text-primary" />
@@ -30,6 +30,6 @@ export default function LandingLayout({
           © {new Date().getFullYear()} Verdea. Todos os direitos reservados.
         </p>
       </footer>
-    </>
+    </div>
   );
 }
