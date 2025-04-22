@@ -2,8 +2,8 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
-import { LoginForm } from "../register-forms/LoginForm";
-import { SignUpForm } from "../register-forms/SignUpForm";
+import LoginForm from "@/components/register-forms/LoginForm";
+import SignUpForm from "@/components/register-forms/SignUpForm";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../ui/card";
 import { useSearchParams } from "next/navigation";
 

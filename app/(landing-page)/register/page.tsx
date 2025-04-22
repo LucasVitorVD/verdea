@@ -1,6 +1,8 @@
 import { ArrowRight, Droplet } from "lucide-react";
 import Link from "next/link";
 import RegisterTab from "@/components/register-tab/RegisterTab";
+import { Suspense } from "react";
+import Spinner from "@/components/spinner/Spinner";
 
 export default function RegisterPage() {
   return (
@@ -18,7 +20,9 @@ export default function RegisterPage() {
             </div>
             <div className="flex flex-1 items-center justify-center">
               <div className="w-full max-w-xs space-y-8">
-                <RegisterTab />
+                <Suspense fallback={<Spinner />}>
+                  <RegisterTab />
+                </Suspense>
               </div>
             </div>
           </div>
