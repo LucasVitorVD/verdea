@@ -47,7 +47,7 @@ export default function LoginForm({
       </div>
       <div className="text-center text-sm">
         Não possui uma conta?{" "}
-        <Link href="/register?tab=sign-up" className="underline underline-offset-4 hover:text-primary">
+        <Link href="/register?tab=sign-up" className="text-primary underline-offset-4 hover:underline">
           Criar conta
         </Link>
       </div>

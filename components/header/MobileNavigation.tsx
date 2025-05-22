@@ -48,7 +48,7 @@ export default function MobileNavigation() {
               ))}
               <NavigationMenuItem>
                 <Link
-                  href="/login"
+                  href="/register?tab=login"
                   passHref
                   className={`${buttonVariants()} underline`}
                   onClick={() => setOpen(false)}
