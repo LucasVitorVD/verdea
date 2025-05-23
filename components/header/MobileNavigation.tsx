@@ -18,6 +18,7 @@ import { Menu } from "lucide-react";
 import { navigationItems } from "@/lib/navigation";
 import { buttonVariants } from "@/components/ui/button"
 import { useState } from "react";
+import AuthStatusSwitcher from "./AuthStatusSwitcher";
 
 export default function MobileNavigation() {
   const [open, setOpen] = useState(false);
@@ -46,15 +47,8 @@ export default function MobileNavigation() {
                   </Link>
                 </NavigationMenuItem>
               ))}
-              <NavigationMenuItem>
-                <Link
-                  href="/register?tab=login"
-                  passHref
-                  className={`${buttonVariants()} underline`}
-                  onClick={() => setOpen(false)}
-                >
-                  Entrar
-                </Link>
+              <NavigationMenuItem className="mt-2 ml-2">
+                <AuthStatusSwitcher />
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>

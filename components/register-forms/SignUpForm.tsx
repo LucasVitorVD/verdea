@@ -47,13 +47,13 @@ export default function SignUpForm() {
   });
 
   function onSubmit(values: SignUpFormSchemaType) {
-    const user = {
+    const newUser = {
       email: values.email,
       password: values.password,
     };
 
     const retryMutation = () => {
-      toast.promise(mutation.mutateAsync(user), {
+      toast.promise(mutation.mutateAsync(newUser), {
         loading: "Processando...",
         success: () => {
           return {

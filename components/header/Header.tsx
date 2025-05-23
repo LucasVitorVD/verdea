@@ -8,11 +8,13 @@ import {
 } from "@/components/ui/navigation-menu";
 import { navigationItems } from "@/lib/navigation";
 import MobileNavigation from "./MobileNavigation";
-import { buttonVariants } from "@/components/ui/button"
+import AuthStatusSwitcher from "./AuthStatusSwitcher";
+import { Suspense } from "react";
+import Spinner from "../spinner/Spinner";
 
 export default function Header() {
   return (
-    <header className="flex justify-between px-8 py-6 sticky top-0 bg-white/80 backdrop-blur-lg z-50">
+    <header className="flex justify-between px-16 py-6 sticky top-0 bg-white/80 backdrop-blur-lg z-50">
       <Link href="/" className="flex items-center gap-1.5">
         <Droplet className="h-6 w-6 text-primary" />
         <span className="text-xl font-bold">Verdea</span>
@@ -34,7 +36,7 @@ export default function Header() {
 
       <div className="flex items-center gap-12">
         <div className="space-x-4 hidden lg:block">
-          <Link href="/register?tab=login" className={buttonVariants()}>Entrar</Link>
+          <AuthStatusSwitcher />
         </div>
 
         <MobileNavigation />

@@ -1,40 +1,131 @@
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import Link from "next/link"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import {
+  SignInFormSchemaType,
+  signInFormSchema,
+} from "@/zod-schemas/form/sign-in";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import PasswordInput from "./PasswordInput";
+import { useRouter } from "next/navigation";
+import axiosInstance from "@/lib/axios";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
-export default function LoginForm({
-  className,
-  ...props
-}: React.ComponentProps<"form">) {
+export default function LoginForm() {
+  const router = useRouter();
+
+  const form = useForm<SignInFormSchemaType>({
+    resolver: zodResolver(signInFormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: async (user: { email: string; password: string }) => {
+      return axiosInstance.post(
+        process.env.NEXT_PUBLIC_API_URL + "/auth/login",
+        user
+      );
+    },
+    onSuccess: () => {
+      router.push("/dashboard");
+      form.reset();
+    },
+  });
+
+  const onSubmit = async (values: SignInFormSchemaType) => {
+    const user = {
+      email: values.email,
+      password: values.password,
+    };
+
+    const retryMutation = () => {
+      toast.promise(mutation.mutateAsync(user), {
+        loading: "Processando...",
+        success: () => {
+          return {
+            message: "Usuário autenticado com sucesso!",
+          };
+        },
+        error: () => {
+          return {
+            message: mutation.error?.message || "Erro ao autenticar usuário",
+            action: {
+              label: "Reenviar",
+              onClick: retryMutation,
+              children: <Button disabled={mutation.isPending}>Reenviar</Button>,
+            },
+            style: {
+              background: "hsl(0 50% 45%)",
+              color: "white",
+              border: "1px solid hsl(0 50% 45%)",
+            },
+          };
+        },
+      });
+    };
+
+    retryMutation()
+  }
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
-      <div className="grid gap-6">
-        <div className="grid gap-3">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="m@example.com" required />
-        </div>
-        <div className="grid gap-3">
-          <div className="flex items-center">
-            <Label htmlFor="password">Senha</Label>
-            <a
-              href="#"
-              className="ml-auto text-sm underline-offset-4 hover:underline"
-            >
-              Esqueceu sua senha?
-            </a>
-          </div>
-          <Input id="password" type="password" required />
-        </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Senha</FormLabel>
+              <FormControl>
+                <PasswordInput name={field.name} register={form.register} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <Button type="submit" className="w-full cursor-pointer">
           Entrar
         </Button>
+
         <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
           <span className="bg-background text-muted-foreground relative z-10 px-2">
             Ou continue com
           </span>
         </div>
+
         <Button variant="outline" className="w-full">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path
@@ -44,13 +135,17 @@ export default function LoginForm({
           </svg>
           Login with GitHub
         </Button>
-      </div>
-      <div className="text-center text-sm">
-        Não possui uma conta?{" "}
-        <Link href="/register?tab=sign-up" className="text-primary underline-offset-4 hover:underline">
-          Criar conta
-        </Link>
-      </div>
-    </form>
-  )
+
+        <div className="text-center text-sm">
+          Não possui uma conta?{" "}
+          <Link
+            href="/register?tab=sign-up"
+            className="text-primary underline-offset-4 hover:underline"
+          >
+            Criar conta
+          </Link>
+        </div>
+      </form>
+    </Form>
+  );
 }
