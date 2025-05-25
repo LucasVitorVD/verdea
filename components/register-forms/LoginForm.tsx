@@ -16,32 +16,17 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import PasswordInput from "./PasswordInput";
-import { useRouter } from "next/navigation";
-import axiosInstance from "@/lib/axios";
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginForm() {
-  const router = useRouter();
+  const { loginMutation } = useAuth();
 
   const form = useForm<SignInFormSchemaType>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
       email: "",
       password: "",
-    },
-  });
-
-  const mutation = useMutation({
-    mutationFn: async (user: { email: string; password: string }) => {
-      return axiosInstance.post(
-        process.env.NEXT_PUBLIC_API_URL + "/auth/login",
-        user
-      );
-    },
-    onSuccess: () => {
-      router.push("/dashboard");
-      form.reset();
     },
   });
 
@@ -52,7 +37,7 @@ export default function LoginForm() {
     };
 
     const retryMutation = () => {
-      toast.promise(mutation.mutateAsync(user), {
+      toast.promise(loginMutation.mutateAsync(user), {
         loading: "Processando...",
         success: () => {
           return {
@@ -61,11 +46,11 @@ export default function LoginForm() {
         },
         error: () => {
           return {
-            message: mutation.error?.message || "Erro ao autenticar usuário",
+            message: loginMutation.error?.message || "Erro ao autenticar usuário",
             action: {
               label: "Reenviar",
               onClick: retryMutation,
-              children: <Button disabled={mutation.isPending}>Reenviar</Button>,
+              children: <Button disabled={loginMutation.isPending}>Reenviar</Button>,
             },
             style: {
               background: "hsl(0 50% 45%)",

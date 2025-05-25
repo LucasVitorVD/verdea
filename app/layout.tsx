@@ -3,6 +3,7 @@ import { soDoSans } from "@/lib/fonts";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner"
 import TanstackProvider from "@/context/TanstackQueryContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Verdea",
@@ -18,7 +19,9 @@ export default function RootLayout({
     <html lang="pt-br" className="scroll-smooth">
       <body className={`${soDoSans.className} antialiased`}>
         <TanstackProvider>
-          {children}
+          <AuthProvider>
+            {children}
+          </AuthProvider>
           <Toaster richColors />
         </TanstackProvider>
       </body>

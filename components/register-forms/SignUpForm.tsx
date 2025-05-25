@@ -12,17 +12,15 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import PasswordInput from "./PasswordInput";
-import { useMutation } from "@tanstack/react-query";
 import {
   SignUpFormSchemaType,
   signUpFormSchema,
 } from "@/zod-schemas/form/sign-up";
 import { toast } from "sonner";
-import axiosInstance from "@/lib/axios";
-import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function SignUpForm() {
-  const router = useRouter();
+  const { signUpMutation } = useAuth()
 
   const form = useForm<SignUpFormSchemaType>({
     resolver: zodResolver(signUpFormSchema),
@@ -33,19 +31,6 @@ export default function SignUpForm() {
     },
   });
 
-  const mutation = useMutation({
-    mutationFn: async (newUser: { email: string; password: string }) => {
-      return axiosInstance.post(
-        process.env.NEXT_PUBLIC_API_URL + "/auth/register",
-        newUser
-      );
-    },
-    onSuccess: () => {
-      router.push("/register?tab=login");
-      form.reset();
-    },
-  });
-
   function onSubmit(values: SignUpFormSchemaType) {
     const newUser = {
       email: values.email,
@@ -53,7 +38,7 @@ export default function SignUpForm() {
     };
 
     const retryMutation = () => {
-      toast.promise(mutation.mutateAsync(newUser), {
+      toast.promise(signUpMutation.mutateAsync(newUser), {
         loading: "Processando...",
         success: () => {
           return {
@@ -62,11 +47,11 @@ export default function SignUpForm() {
         },
         error: () => {
           return {
-            message: mutation.error?.message || "Erro ao criar usuário",
+            message: signUpMutation.error?.message || "Erro ao criar usuário",
             action: {
               label: "Reenviar",
               onClick: retryMutation,
-              children: <Button disabled={mutation.isPending}>Reenviar</Button>,
+              children: <Button disabled={signUpMutation.isPending}>Reenviar</Button>,
             },
             style: {
               background: "hsl(0 50% 45%)",

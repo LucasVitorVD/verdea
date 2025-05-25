@@ -9,8 +9,6 @@ import {
 import { navigationItems } from "@/lib/navigation";
 import MobileNavigation from "./MobileNavigation";
 import AuthStatusSwitcher from "./AuthStatusSwitcher";
-import { Suspense } from "react";
-import Spinner from "../spinner/Spinner";
 
 export default function Header() {
   return (
