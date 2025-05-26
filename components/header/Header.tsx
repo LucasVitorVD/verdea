@@ -6,11 +6,15 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import { navigationItems } from "@/lib/navigation";
 import MobileNavigation from "./MobileNavigation";
 import AuthStatusSwitcher from "./AuthStatusSwitcher";
+import { NavigationItems } from "@/interfaces/navigationItem";
 
-export default function Header() {
+interface Props {
+  navigationItems: NavigationItems[];
+}
+
+export default function Header({ navigationItems }: Props) {
   return (
     <header className="flex justify-between px-16 py-6 sticky top-0 bg-white/80 backdrop-blur-lg z-50">
       <Link href="/" className="flex items-center gap-1.5">
@@ -37,7 +41,7 @@ export default function Header() {
           <AuthStatusSwitcher />
         </div>
 
-        <MobileNavigation />
+        <MobileNavigation navigationItems={navigationItems} />
       </div>
     </header>
   );

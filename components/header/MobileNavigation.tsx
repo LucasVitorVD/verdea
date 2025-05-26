@@ -15,12 +15,15 @@ import {
 } from "@/components/ui/sheet";
 import Link from "next/link";
 import { Menu } from "lucide-react";
-import { navigationItems } from "@/lib/navigation";
-import { buttonVariants } from "@/components/ui/button"
 import { useState } from "react";
 import AuthStatusSwitcher from "./AuthStatusSwitcher";
+import { NavigationItems } from "@/interfaces/navigationItem";
 
-export default function MobileNavigation() {
+interface Props {
+  navigationItems: NavigationItems[]
+}
+
+export default function MobileNavigation({ navigationItems }: Props) {
   const [open, setOpen] = useState(false);
 
   return (

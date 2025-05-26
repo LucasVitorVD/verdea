@@ -10,5 +10,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/register?tab=login', request.url));
   }
 
+  if (!isProtectedRoute && token && request.nextUrl.pathname.startsWith('/register')) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
+
   return NextResponse.next();
 }

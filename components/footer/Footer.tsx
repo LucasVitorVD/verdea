@@ -1,6 +1,5 @@
 import { Droplet, Github, Linkedin } from "lucide-react";
 import Link from "next/link";
-import { navigationItems } from "@/lib/navigation";
 import { Separator } from "../ui/separator";
 import {
   Dialog,
@@ -13,8 +12,13 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
+import { NavigationItems } from "@/interfaces/navigationItem";
 
-export default function Footer() {
+interface Props {
+  navigationItems: NavigationItems[]
+}
+
+export default function Footer({ navigationItems }: Props) {
   const currentYear = new Date().getFullYear();
 
   return (

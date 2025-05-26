@@ -19,6 +19,7 @@ import {
 import Esp32Model from "@/components/3dModel/Esp32Model";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import { publicPageNavigation } from "@/lib/navigation";
 
 const featuresCards = [
   {
@@ -62,7 +63,7 @@ const featuresCards = [
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
-      <Header />
+      <Header navigationItems={publicPageNavigation} />
       <main className="flex flex-col flex-1">
         <section className="relative h-screen w-full overflow-hidden">
           <div className="absolute inset-0 w-full h-full">
@@ -400,7 +401,7 @@ export default function Home() {
           </Link>
         </section>
       </main>
-      <Footer />
+      <Footer navigationItems={publicPageNavigation} />
     </div>
   );
 }

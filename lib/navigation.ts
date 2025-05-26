@@ -1,4 +1,6 @@
-export const navigationItems: { title: string; href: string }[] = [
+import { NavigationItems } from "@/interfaces/navigationItem";
+
+export const publicPageNavigation: NavigationItems[] = [
   {
     title: "Início",
     href: "/",
@@ -21,7 +23,7 @@ export const navigationItems: { title: string; href: string }[] = [
   },
 ];
 
-export const dashboardNavigationItems = [
+export const dashboardNavigationItems: NavigationItems[] = [
   {
     title: "Início",
     href: "/",

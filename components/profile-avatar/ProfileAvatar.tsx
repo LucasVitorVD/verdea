@@ -10,23 +10,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
 
 export default function ProfileAvatar() {
-  const { logoutMutation } = useAuth()
+  const { logoutMutation, userQuery } = useAuth()
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="cursor-pointer">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
+          <AvatarFallback>{userQuery.data?.email.slice(0, 2).toUpperCase() ?? "CN"}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Perfil</DropdownMenuItem>
-        <DropdownMenuItem>Dashboard</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href="/dashboard">Dashboard</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem className="text-red-500 hover:text-red-400" onClick={() => logoutMutation.mutate()}>
           Sair
         </DropdownMenuItem>
