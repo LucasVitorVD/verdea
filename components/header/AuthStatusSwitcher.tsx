@@ -9,7 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 export default function AuthStatusSwitcher() {
   const { userQuery } = useAuth();
 
-  if (userQuery.isLoading) {
+  if (userQuery.isLoading || userQuery.isFetching) {
     return (
       <Spinner />
     )

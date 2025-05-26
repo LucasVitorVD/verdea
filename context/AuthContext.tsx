@@ -9,7 +9,7 @@ import {
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { createContext, useContext } from "react";
 import { toast } from "sonner";
@@ -51,13 +51,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const userQuery = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      const request = await axiosInstance.get(
-        process.env.NEXT_PUBLIC_API_URL + "/user/me"
-      );
+      try {
+        const request = await axiosInstance.get(
+          process.env.NEXT_PUBLIC_API_URL + "/user/me"
+        );
 
-      return request.data;
+        return request.data;
+      } catch (error) {
+        throw error
+      }
     },
-    retry: false,
+    retry: (failureCount, error: AxiosError) => {
+      if (error?.response?.status === 401 && failureCount < 2) {
+        return true;
+      }
+
+      return false;
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
 
   const signUpMutation = useMutation({
