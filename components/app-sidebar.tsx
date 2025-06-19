@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Home, Leaf, Settings, Droplets, RadioReceiver } from "lucide-react";
+import { dashboardNavigationItems } from "@/lib/navigation";
 
 import { NavSections } from "@/components/nav-sections";
 import { NavMain } from "@/components/nav-main";
@@ -18,38 +18,6 @@ import {
 } from "@/components/ui/sidebar";
 import { Droplet } from "lucide-react";
 import Link from "next/link";
-
-const data = {
-  documents: [
-    {
-      name: "Dashboard",
-      url: "/dashboard",
-      icon: Home,
-    },
-    {
-      name: "Minhas Plantas",
-      url: "/plants",
-      icon: Leaf,
-    },
-    {
-      name: "Meus dispositivos",
-      url: "/devices",
-      icon: RadioReceiver,
-    },
-    {
-      name: "Histórico de irrigação",
-      url: "/irrigation-history",
-      icon: Droplets,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Configurações",
-      url: "/settings",
-      icon: Settings,
-    }
-  ]
-};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -71,8 +39,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain />
-        <NavSections items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSections items={dashboardNavigationItems.documents} />
+        <NavSecondary items={dashboardNavigationItems.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
