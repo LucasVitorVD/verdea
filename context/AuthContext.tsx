@@ -40,6 +40,23 @@ type AuthContextType = {
     void,
     unknown
   >;
+  forgotPasswordMutation: UseMutationResult<
+    AxiosResponse<any, any>,
+    Error,
+    {
+      email: string;
+    },
+    unknown
+  >;
+  resetPasswordMutation: UseMutationResult<
+    AxiosResponse<any, any>,
+    Error,
+    {
+      token: string;
+      newPassword: string;
+    },
+    unknown
+  >;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,7 +75,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         return request.data;
       } catch (error) {
-        throw error
+        throw error;
       }
     },
     retry: (failureCount, error: AxiosError) => {
@@ -114,6 +131,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     retry: 2,
   });
 
+  const forgotPasswordMutation = useMutation({
+    mutationFn: async (email: { email: string }) => {
+      return axiosInstance.post(
+        process.env.NEXT_PUBLIC_API_URL + "/auth/forgot-password",
+        email
+      );
+    },
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: async (resetPasswordRequest: {
+      token: string;
+      newPassword: string;
+    }) => {
+      return axiosInstance.post(
+        process.env.NEXT_PUBLIC_API_URL + "/auth/reset-password",
+        resetPasswordRequest
+      );
+    },
+  });
+
   return (
     <AuthContext.Provider
       value={{
@@ -121,6 +159,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         signUpMutation,
         loginMutation,
         logoutMutation,
+        forgotPasswordMutation,
+        resetPasswordMutation
       }}
     >
       {children}

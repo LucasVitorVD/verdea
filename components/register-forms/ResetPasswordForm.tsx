@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -6,8 +6,17 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
 import { Button } from "../ui/button";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage, Form } from "../ui/form";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+  Form,
+} from "../ui/form";
 import PasswordInput from "./PasswordInput";
+import { useAuth } from "@/context/AuthContext";
+import { useSearchParams, useRouter } from "next/navigation";
 
 const resetPasswordFormSchema = z
   .object({
@@ -22,6 +31,13 @@ const resetPasswordFormSchema = z
   });
 
 export default function ResetPasswordForm() {
+  const { resetPasswordMutation } = useAuth();
+
+  const searchParams = useSearchParams()
+  const router = useRouter()
+ 
+  const token = searchParams.get('token')
+
   const form = useForm<z.infer<typeof resetPasswordFormSchema>>({
     resolver: zodResolver(resetPasswordFormSchema),
     defaultValues: {
@@ -30,19 +46,38 @@ export default function ResetPasswordForm() {
     },
   });
 
-  async function onSubmit(
-    values: z.infer<typeof resetPasswordFormSchema>
-  ) {
-    try {
-      // Assuming an async reset password function
-      console.log(values);
-      toast.success(
-        "Password reset successful. You can now log in with your new password."
-      );
-    } catch (error) {
-      console.error("Error resetting password", error);
-      toast.error("Failed to reset the password. Please try again.");
-    }
+  async function onSubmit(values: z.infer<typeof resetPasswordFormSchema>) {
+    const retryMutation = () => {
+      toast.promise(resetPasswordMutation.mutateAsync({ token: token!, newPassword: values.password }), {
+        loading: "Processando...",
+        success: () => {
+          router.push("/register?tab=login")
+          return {
+            message: "Nova senha registrada!",
+          };
+        },
+        error: () => {
+          return {
+            message:
+              resetPasswordMutation.error?.message || "Erro ao mudar senha",
+            action: {
+              label: "Reenviar",
+              onClick: retryMutation,
+              children: (
+                <Button disabled={resetPasswordMutation.isPending}>Reenviar</Button>
+              ),
+            },
+            style: {
+              background: "hsl(0 50% 45%)",
+              color: "white",
+              border: "1px solid hsl(0 50% 45%)",
+            },
+          };
+        },
+      });
+    };
+
+    retryMutation();
   }
 
   return (
@@ -68,9 +103,7 @@ export default function ResetPasswordForm() {
             name="confirmPassword"
             render={({ field }) => (
               <FormItem className="grid gap-2">
-                <FormLabel htmlFor="confirmPassword">
-                  Confirmar senha
-                </FormLabel>
+                <FormLabel htmlFor="confirmPassword">Confirmar senha</FormLabel>
                 <FormControl>
                   <PasswordInput name={field.name} register={form.register} />
                 </FormControl>
@@ -79,7 +112,7 @@ export default function ResetPasswordForm() {
             )}
           />
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full cursor-pointer" disabled={resetPasswordMutation.isPending}>
             Mudar Senha
           </Button>
         </div>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React from "react";
 import { Button } from "../ui/button";
@@ -15,16 +15,15 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-
-interface Props {
-  setCurrentTab: React.Dispatch<"forgot-password" | "reset-password">
-}
+import { useAuth } from "@/context/AuthContext";
 
 const formSchema = z.object({
   email: z.string().email({ message: "E-mail inválido." }),
 });
 
-export default function ForgotPasswordForm({ setCurrentTab }: Props) {
+export default function ForgotPasswordForm() {
+  const { forgotPasswordMutation } = useAuth();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,15 +32,36 @@ export default function ForgotPasswordForm({ setCurrentTab }: Props) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      // Assuming a function to send reset email
-      console.log(values);
-      toast.success("Password reset email sent. Please check your inbox.");
-      setCurrentTab("reset-password")
-    } catch (error) {
-      console.error("Error sending password reset email", error);
-      toast.error("Failed to send password reset email. Please try again.");
-    }
+    const retryMutation = () => {
+      toast.promise(forgotPasswordMutation.mutateAsync({ email: values.email }), {
+        loading: "Carregando...",
+        success: () => {
+          return {
+            message: "Email enviado! Caso não apareça, verifique sua caixa de spam.",
+          };
+        },
+        error: () => {
+          return {
+            message:
+              forgotPasswordMutation.error?.message || "Erro ao enviar email",
+            action: {
+              label: "Reenviar",
+              onClick: retryMutation,
+              children: (
+                <Button disabled={forgotPasswordMutation.isPending}>Reenviar</Button>
+              ),
+            },
+            style: {
+              background: "hsl(0 50% 45%)",
+              color: "white",
+              border: "1px solid hsl(0 50% 45%)",
+            },
+          };
+        },
+      });
+    };
+
+    retryMutation();
   }
 
   return (
@@ -67,7 +87,7 @@ export default function ForgotPasswordForm({ setCurrentTab }: Props) {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full cursor-pointer" disabled={forgotPasswordMutation.isPending}>
             Enviar link
           </Button>
         </div>
