@@ -16,11 +16,11 @@ import {
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { useState } from "react";
-import AuthStatusSwitcher from "./AuthStatusSwitcher";
 import { NavigationItems } from "@/interfaces/navigationItem";
+import { buttonVariants } from "../ui/button";
 
 interface Props {
-  navigationItems: NavigationItems[]
+  navigationItems: NavigationItems[];
 }
 
 export default function MobileNavigation({ navigationItems }: Props) {
@@ -51,7 +51,9 @@ export default function MobileNavigation({ navigationItems }: Props) {
                 </NavigationMenuItem>
               ))}
               <NavigationMenuItem className="mt-2 ml-2">
-                <AuthStatusSwitcher />
+                <Link href="/register?tab=login" className={buttonVariants()}>
+                  Entrar
+                </Link>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>

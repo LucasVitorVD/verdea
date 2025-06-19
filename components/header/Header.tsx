@@ -7,8 +7,8 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import MobileNavigation from "./MobileNavigation";
-import AuthStatusSwitcher from "./AuthStatusSwitcher";
 import { NavigationItems } from "@/interfaces/navigationItem";
+import { buttonVariants } from "../ui/button";
 
 interface Props {
   navigationItems: NavigationItems[];
@@ -38,7 +38,9 @@ export default function Header({ navigationItems }: Props) {
 
       <div className="flex items-center gap-12">
         <div className="space-x-4 hidden lg:block">
-          <AuthStatusSwitcher />
+          <Link href="/register?tab=login" className={buttonVariants()}>
+            Entrar
+          </Link>
         </div>
 
         <MobileNavigation navigationItems={navigationItems} />
