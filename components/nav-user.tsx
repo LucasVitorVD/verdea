@@ -23,6 +23,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 
 export function NavUser() {
@@ -60,23 +61,19 @@ export function NavUser() {
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <IconUserCircle />
-                Perfil
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconCreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <IconNotification />
-                Notifications
-              </DropdownMenuItem>
+              <Link href="/dashboard/profile">
+                <DropdownMenuItem className="cursor-pointer">
+                  <IconUserCircle />
+                  Perfil
+                </DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-500 hover:text-red-400" onClick={() => logoutMutation.mutate()}>
+            <DropdownMenuItem
+              className="text-red-500 hover:text-red-400"
+              onClick={() => logoutMutation.mutate()}
+            >
               <IconLogout className="text-red-500 hover:text-red-400" />
               Log out
             </DropdownMenuItem>
