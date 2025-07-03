@@ -32,7 +32,17 @@ axiosInstance.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as CustomAxiosRequestConfig;
 
-    if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.url?.includes('/auth/refresh-token')) {
+    const isAuthEndpoint =
+      originalRequest.url?.includes("/auth/login") ||
+      originalRequest.url?.includes("/auth/register") ||
+      originalRequest.url?.includes("/auth/forgot-password") ||
+      originalRequest.url?.includes("/auth/reset-password");
+
+    if (error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes("/auth/refresh-token") &&
+      !isAuthEndpoint) {
+
       originalRequest._retry = true;
 
       if (!isRefreshing) {
@@ -60,7 +70,7 @@ axiosInstance.interceptors.response.use(
       return new Promise((resolve, reject) => {
         failedRequestQueue.push({
           resolve: () => resolve(axiosInstance(originalRequest)),
-          reject: (err) => { reject(err) },
+          reject: (err) => reject(err),
         });
       });
     }

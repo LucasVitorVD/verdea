@@ -24,14 +24,41 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import axiosInstance from "@/lib/axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function PrivacyCard() {
   const [deleteInput, setDeleteInput] = useState("");
 
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: async () => {
+      return axiosInstance.delete(
+        process.env.NEXT_PUBLIC_API_URL + "/user/delete"
+      );
+    },
+    onSuccess: () => {
+      queryClient.setQueryData(["user"], null);
+      toast.success("Dados excluídos com sucesso!");
+      router.push("/register?tab=login");
+    },
+    onError: () => {
+      toast.error("Erro ao excluir dados!");
+    },
+    retry: 2,
+  });
+
   const handleDeleteAccount = () => {
-    if (deleteInput === "EXCLUIR") {
-      console.log("deletando conta...");
+    if (deleteInput !== "EXCLUIR") {
+      return;
     }
+
+    deleteAccountMutation.mutate();
+    setDeleteInput("");
   };
 
   return (
@@ -142,6 +169,7 @@ export default function PrivacyCard() {
                   <AlertDialogAction
                     onClick={handleDeleteAccount}
                     className="bg-destructive text-white hover:bg-destructive/90 cursor-pointer"
+                    disabled={deleteInput !== "EXCLUIR"}
                   >
                     Excluir conta permanentemente
                   </AlertDialogAction>

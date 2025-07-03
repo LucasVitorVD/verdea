@@ -18,7 +18,7 @@ type AuthContextType = {
   userQuery: UseQueryResult<User, Error>;
   signUpMutation: UseMutationResult<
     AxiosResponse<any, any>,
-    Error,
+    AxiosError,
     {
       email: string;
       password: string;
@@ -27,7 +27,7 @@ type AuthContextType = {
   >;
   loginMutation: UseMutationResult<
     AxiosResponse<any, any>,
-    Error,
+    AxiosError,
     {
       email: string;
       password: string;
@@ -42,7 +42,7 @@ type AuthContextType = {
   >;
   forgotPasswordMutation: UseMutationResult<
     AxiosResponse<any, any>,
-    Error,
+    AxiosError,
     {
       email: string;
     },
@@ -50,7 +50,7 @@ type AuthContextType = {
   >;
   resetPasswordMutation: UseMutationResult<
     AxiosResponse<any, any>,
-    Error,
+    AxiosError,
     {
       token: string;
       newPassword: string;

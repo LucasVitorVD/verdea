@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import PasswordInput from "./PasswordInput";
 import { toast } from "sonner";
 import { useAuth } from "@/context/AuthContext";
+import { AxiosError, isAxiosError } from "axios";
 
 export default function LoginForm() {
   const { loginMutation } = useAuth();
@@ -44,10 +45,14 @@ export default function LoginForm() {
             message: "Usuário autenticado com sucesso!",
           };
         },
-        error: () => {
+        error: (error) => {
+          const apiMessage =
+            isAxiosError(error) && error.response?.data?.message
+              ? error.response.data.message
+              : "Erro ao autenticar usuário";
+
           return {
-            message:
-              loginMutation.error?.message || "Erro ao autenticar usuário",
+            message: apiMessage,
             action: {
               label: "Reenviar",
               onClick: retryMutation,

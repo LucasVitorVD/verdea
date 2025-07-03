@@ -30,13 +30,14 @@ import { useAuth } from "@/context/AuthContext";
 
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import PasswordInput from "../register-forms/PasswordInput";
+import axiosInstance from "@/lib/axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z
   .object({
     email: z.string().email("Email inválido"),
-    currentPassword: z
-      .string()
-      .min(6, "Senha deve ter pelo menos 6 caracteres"),
     newPassword: z
       .string()
       .min(6, "A nova senha deve ter pelo menos 6 caracteres"),
@@ -52,25 +53,47 @@ const FormSchema = z
 export default function ProfileCard() {
   const [isEditing, setIsEditing] = useState(false);
 
-  const { userQuery: profileData } = useAuth();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const { userQuery: profileData, logoutMutation } = useAuth();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       email: "",
-      currentPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
   });
 
+  const updateInfoMutation = useMutation({
+    mutationFn: async (updatedInfo: { email: string; password: string }) => {
+      return axiosInstance.patch(
+        process.env.NEXT_PUBLIC_API_URL + "/user/update",
+        updatedInfo
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      logoutMutation.mutate();
+      router.push("/register?tab=login");
+    },
+  });
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    const updatedInfo = {
+      email: data.email,
+      password: data.newPassword,
+    };
+
+    toast.promise(updateInfoMutation.mutateAsync(updatedInfo), {
+      loading: "Atualizando informações...",
+      success: "Informações atualizadas com sucesso! Faça login novamente.",
+      error: (error) => {
+        return error instanceof Error
+          ? error.message
+          : "Erro ao atualizar informações";
+      },
     });
   }
 
@@ -149,32 +172,14 @@ export default function ProfileCard() {
 
                 <FormField
                   control={form.control}
-                  name="currentPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Senha atual</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Digite sua senha atual"
-                          {...field}
-                          disabled={!isEditing}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
                   name="newPassword"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Nova senha</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Digite sua nova senha"
-                          {...field}
+                        <PasswordInput
+                          name={field.name}
+                          register={form.register}
                           disabled={!isEditing}
                         />
                       </FormControl>
@@ -190,9 +195,9 @@ export default function ProfileCard() {
                     <FormItem>
                       <FormLabel>Confirmar senha</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Confirme sua nova senha"
-                          {...field}
+                        <PasswordInput
+                          name={field.name}
+                          register={form.register}
                           disabled={!isEditing}
                         />
                       </FormControl>
