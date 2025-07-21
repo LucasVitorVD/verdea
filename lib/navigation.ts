@@ -38,7 +38,7 @@ export const dashboardNavigationItems = {
     },
     {
       name: "Meus dispositivos",
-      url: "/devices",
+      url: "/dashboard/devices",
       icon: RadioReceiver,
     },
     {
@@ -47,11 +47,4 @@ export const dashboardNavigationItems = {
       icon: Droplets,
     },
   ],
-  navSecondary: [
-    {
-      title: "Configurações",
-      url: "/settings",
-      icon: Settings,
-    }
-  ]
 };
