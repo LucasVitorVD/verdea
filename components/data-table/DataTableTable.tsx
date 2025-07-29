@@ -25,7 +25,6 @@ export function DataTableTable<TData, TValue>({
   columns,
   isLoading,
 }: DataTableProps<TData, TValue>) {
-
   return (
     <div className="rounded-md border">
       <Table>
@@ -74,8 +73,7 @@ export function DataTableTable<TData, TValue>({
           {!isLoading && !table.getRowModel().rows?.length && (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                Não foi possível carregar os dispositivos. Por favor, tente
-                novamente mais tarde.
+                Não foi possível carregar os dados.
               </TableCell>
             </TableRow>
           )}
