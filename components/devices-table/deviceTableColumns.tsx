@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import type { Device } from "@/interfaces/device";
-import DeviceDetailsDialog from "../device-details-dialog/DeviceDetailsDialog";
+import DeviceDetailsDialog from "./DeviceDetailsDialog";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import Actions from "./Actions";

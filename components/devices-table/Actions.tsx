@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { MoreHorizontal, Copy, Eye, SquarePen, Trash2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import DeviceDetailsDialog from "./DeviceDetailsDialog";
 
 interface ActionsProps {
   device: Device;
@@ -35,7 +36,7 @@ export default function Actions({ device }: ActionsProps) {
     },
     onError: () => {
       toast.error("Erro ao excluir dispositivo. Por favor, tente novamente.");
-    }
+    },
   });
 
   return (
@@ -57,8 +58,15 @@ export default function Actions({ device }: ActionsProps) {
           Copiar endereço MAC
         </DropdownMenuItem>
         <DropdownMenuItem className="flex items-center gap-2">
-          <Eye />
-          Ver detalhes
+          <DeviceDetailsDialog
+            dialogTrigger={
+              <div className="text-primary cursor-pointer hover:underline">
+                <Eye />
+                Ver detalhes
+              </div>
+            }
+            device={device}
+          />
         </DropdownMenuItem>
         <DropdownMenuItem className="flex items-center gap-2">
           <SquarePen />

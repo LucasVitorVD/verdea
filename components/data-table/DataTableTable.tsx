@@ -1,7 +1,4 @@
-import {
-  ColumnDef,
-  Table as TansTackTable,
-} from "@tanstack/react-table";
+import { ColumnDef, Table as TansTackTable } from "@tanstack/react-table";
 import {
   Table,
   TableHeader,
@@ -13,9 +10,11 @@ import {
 import { flexRender } from "@tanstack/react-table";
 import Spinner from "../spinner/Spinner";
 import type { Device } from "@/interfaces/device";
+import EmptyState from "../empty-state";
+import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
 
 interface DataTableProps<TData, TValue> {
-  table: TansTackTable<Device>
+  table: TansTackTable<Device>;
   columns: ColumnDef<TData, TValue>[];
   isLoading: boolean;
 }
@@ -72,8 +71,13 @@ export function DataTableTable<TData, TValue>({
 
           {!isLoading && !table.getRowModel().rows?.length && (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                Não foi possível carregar os dados.
+              <TableCell colSpan={columns.length} className="h-26 text-center">
+                <EmptyState
+                  title="Nenhum dispositivo encontrado… por enquanto!"
+                  description="Adicione seu primeiro dispositivo e acompanhe tudo com a ajuda da Verdea, em tempo real."
+                  imgSrc={EmptyIllustration}
+                  imgAlt="Ilustração de dispositivo não encontrado"
+                />
               </TableCell>
             </TableRow>
           )}
