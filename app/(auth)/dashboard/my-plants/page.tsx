@@ -1,22 +1,21 @@
 import GardeningIllustration from "@/public/images/illustrations/undraw_gardening.svg";
-import { Button } from "@/components/ui/button";
-import { Droplet } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import PlantCard from "@/components/cards/PlantCard";
+import AddPlantDialog from "@/components/dialogs/AddPlantDialog";
+
+const plants = [
+  {
+    id: 1,
+    name: "Samambaia",
+    species: "Nephrolepis exaltata",
+    image: "/placeholder.svg?height=200&width=200",
+    moisture: 78,
+    lastWatered: "Hoje, 08:00",
+    status: "Saudável",
+  },
+];
 
 export default function MyPlantsPage() {
-  const plants = [
-    {
-      id: 1,
-      name: "Samambaia",
-      species: "Nephrolepis exaltata",
-      image: "/placeholder.svg?height=200&width=200",
-      moisture: 78,
-      lastWatered: "Hoje, 08:00",
-      status: "Saudável",
-    },
-  ];
-
   return (
     <section className="flex flex-col flex-1 py-4 px-4 gap-12 md:p-6">
       <div className="flex justify-between items-center flex-wrap gap-4">
@@ -28,10 +27,7 @@ export default function MyPlantsPage() {
         </div>
 
         <div className="w-full md:w-auto">
-          <Button className="w-full">
-            <Droplet />
-            Adicionar Planta
-          </Button>
+          <AddPlantDialog />
         </div>
       </div>
 

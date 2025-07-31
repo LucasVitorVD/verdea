@@ -30,7 +30,7 @@ import { useAuth } from "@/context/AuthContext";
 
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import PasswordInput from "../register-forms/PasswordInput";
+import PasswordInput from "../forms/PasswordInput";
 import axiosInstance from "@/lib/axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";

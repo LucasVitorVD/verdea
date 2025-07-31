@@ -2,8 +2,8 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useEffect, useState } from "react";
-import LoginForm from "@/components/register-forms/LoginForm";
-import SignUpForm from "@/components/register-forms/SignUpForm";
+import LoginForm from "@/components/forms/LoginForm";
+import SignUpForm from "@/components/forms/SignUpForm";
 import {
   Card,
   CardHeader,
