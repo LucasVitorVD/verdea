@@ -1,21 +1,46 @@
-import GardeningIllustration from "@/public/images/illustrations/undraw_gardening.svg";
-import EmptyState from "@/components/empty-state";
-import PlantCard from "@/components/cards/PlantCard";
-import AddPlantDialog from "@/components/dialogs/AddPlantDialog";
+"use client";
 
-const plants = [
-  {
-    id: 1,
-    name: "Samambaia",
-    species: "Nephrolepis exaltata",
-    image: "/placeholder.svg?height=200&width=200",
-    moisture: 78,
-    lastWatered: "Hoje, 08:00",
-    status: "Saudável",
-  },
-];
+import { Button } from "@/components/ui/button";
+import AddPlantForm from "@/components/forms/AddPlantForm";
+import { PulsatingButton } from "@/components/magicui/pulsating-button";
+import PlantGrid from "@/components/plant-grid/PlantGrid";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  DialogFooter,
+  DialogHeader,
+} from "@/components/ui/dialog";
+import { Plus } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Plant } from "@/interfaces/plant";
+import axiosInstance from "@/lib/axios";
+import { toast } from "sonner";
 
 export default function MyPlantsPage() {
+  const plantsQuery = useQuery<Plant[]>({
+    queryKey: ["getUserPlants"],
+    queryFn: async () => {
+      try {
+        const request = await axiosInstance.get(
+          process.env.NEXT_PUBLIC_API_URL + "/plant/all"
+        );
+
+        return request.data as Plant[];
+      } catch (error) {
+        toast.error(
+          "Erro ao carregar suas plantas. Tente novamente mais tarde."
+        );
+        return [];
+      }
+    },
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <section className="flex flex-col flex-1 py-4 px-4 gap-12 md:p-6">
       <div className="flex justify-between items-center flex-wrap gap-4">
@@ -27,36 +52,55 @@ export default function MyPlantsPage() {
         </div>
 
         <div className="w-full md:w-auto">
-          <AddPlantDialog />
+          <Dialog>
+            <DialogTrigger asChild>
+              <PulsatingButton pulseColor={plantsQuery.data?.length === 0 ? "rgba(110, 145, 123, 0.3)" : "rgba(0, 0, 0, 0)"}>
+                <div className="flex items-center gap-2">
+                  <Plus className="mr-px size-4" />
+                  Adicionar Planta
+                </div>
+              </PulsatingButton>
+            </DialogTrigger>
+            <DialogContent className="overflow-y-auto max-h-[90vh] lg:min-w-4xl">
+              <DialogHeader>
+                <DialogTitle>Nova planta</DialogTitle>
+                <DialogDescription>
+                  Preencha os detalhes da sua nova planta para começar a
+                  monitorá-la.
+                </DialogDescription>
+              </DialogHeader>
+
+              <div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Informações da Planta</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <AddPlantForm />
+                  </CardContent>
+                </Card>
+              </div>
+              <DialogFooter className="flex justify-end gap-2">
+                <DialogClose asChild>
+                  <Button variant="outline">Cancelar</Button>
+                </DialogClose>
+                <Button type="submit" form="add-plant-form">
+                  <Plus className="mr-px size-4" />
+                  Adicionar Planta
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
-      {plants.length <= 0 && (
+      {plantsQuery.isLoading ? (
         <div className="flex flex-1 items-center justify-center">
-          <EmptyState
-            title="Nenhuma plantinha por aqui… ainda!"
-            description="Adicione sua primeira planta e deixe que a Verdea cuide dela com
-                todo carinho (e água, claro)."
-            imgSrc={GardeningIllustration}
-            imgAlt="Sem plantas"
-          />
+          <p>Carregando suas plantas...</p>
         </div>
+      ) : (
+        <PlantGrid plants={plantsQuery.data ?? []} />
       )}
-
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {plants.length > 0 &&
-          plants.map((plant, index) => (
-            <PlantCard
-              key={plant.id}
-              name={plant.name}
-              species={plant.species}
-              image={plant.image}
-              moisture={plant.moisture}
-              lastWatered={plant.lastWatered}
-              status={plant.status}
-            />
-          ))}
-      </div>
     </section>
   );
 }

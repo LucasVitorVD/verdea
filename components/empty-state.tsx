@@ -11,7 +11,7 @@ interface Props {
 
 export default function EmptyState({ title, description, imgSrc, imgAlt }: Props) {
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 w-full">
       <figure>
         <Image
           src={imgSrc}

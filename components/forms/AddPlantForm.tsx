@@ -46,18 +46,22 @@ type NewPlant = {
   imageUrl: string;
 };
 
-export default function AddPlantForm() {
+interface AddPlantFormProps {
+  data?: PlantFormSchema;
+}
+
+export default function AddPlantForm({ data }: AddPlantFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const form = useForm<PlantFormSchema>({
     resolver: zodResolver(plantFormSchema),
-    defaultValues: {
+    defaultValues: data || {
       name: "",
       species: "",
       location: "",
       notes: "",
-      wateringFrequency: "weekly",
+      wateringFrequency: 0,
       wateringTime: "",
       idealSoilMoisture: 0,
       device: "",
@@ -125,11 +129,13 @@ export default function AddPlantForm() {
         location: data.location,
         notes: data.notes,
         wateringTime: wateringTime,
-        wateringFrequency: frequencyMap[data.wateringFrequency],
+        wateringFrequency: data.wateringFrequency,
         idealSoilMoisture: data.idealSoilMoisture,
         imageUrl: image,
         deviceMacAddress: data.device,
       };
+
+      console.log("Submitting new plant:", newPlant);
 
       mutation.mutate(newPlant);
       toast.success("Planta adicionada!");
@@ -313,8 +319,8 @@ export default function AddPlantForm() {
                 <FormItem>
                   <FormLabel>Frequência de Irrigação</FormLabel>
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={(value) => field.onChange(Number(value))}
+                    defaultValue={String(field.value)}
                   >
                     <FormControl className="w-full">
                       <SelectTrigger>
@@ -322,12 +328,10 @@ export default function AddPlantForm() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="daily">1x ao dia</SelectItem>
-                      <SelectItem value="twice-daily">2x ao dia</SelectItem>
-                      <SelectItem value="every-other-day">
-                        A cada 2 dias
-                      </SelectItem>
-                      <SelectItem value="weekly">Semanal</SelectItem>
+                      <SelectItem value="1">1x ao dia</SelectItem>
+                      <SelectItem value="2">2x ao dia</SelectItem>
+                      <SelectItem value="3">A cada 2 dias</SelectItem>
+                      <SelectItem value="4">Semanal</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

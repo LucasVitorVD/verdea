@@ -6,18 +6,12 @@ export const plantFormSchema = z.object({
   location: z.string().min(2, "Localização é obrigatória"),
   notes: z.string().optional(),
 
-  wateringFrequency: z.enum([
-    "daily",
-    "twice-daily",
-    "every-other-day",
-    "weekly",
-  ], {
+  wateringFrequency: z.number({
     required_error: "Selecione a frequência de irrigação",
   }),
 
   wateringTime: z
     .string()
-    // .regex(/^([0-1]\d|2[0-3]):([0-5]\d)$/, "Horário inválido")
     .optional(),
 
   idealSoilMoisture: z

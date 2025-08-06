@@ -1,5 +1,5 @@
 import DevicesTable from "@/components/devices-table/DevicesTable";
-import AddDeviceDialog from "@/components/add-device-dialog/AddDeviceDialog";
+import AddDeviceDialog from "@/components/dialogs/AddDeviceDialog";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function DevicesPage() {

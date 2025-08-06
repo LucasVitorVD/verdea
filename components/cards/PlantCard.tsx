@@ -1,82 +1,131 @@
-import { Droplet, Thermometer, Info, Settings } from "lucide-react";
+import {
+  Droplet,
+  Thermometer,
+  Info,
+  Settings,
+  Cog,
+  Plus,
+  Pen,
+} from "lucide-react";
 import { Button } from "../ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "../ui/card";
-import Link from "next/link";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "../ui/card";
+import { Plant } from "@/interfaces/plant";
+import Image from "next/image";
+import { Progress } from "@/components/ui/progress";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogClose,
+  DialogHeader,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import AddPlantForm from "../forms/AddPlantForm";
+import { PlantFormSchema } from "@/zod-schemas/form/plant";
 
 interface Props {
-  name: string
-  species: string
-  image: string
-  moisture: number
-  lastWatered: string
-  status: string
-  alert?: boolean
+  plant: Plant;
 }
 
-export default function PlantCard({ name, species, image, moisture, lastWatered, status, alert = false }: Props) {
+export default function PlantCard({ plant }: Props) {
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-md">
-      <Link href={`/plant/${name.toLowerCase()}/details`} className="block">
-        <div className="aspect-square relative">
-          <img src={image || "/placeholder.svg"} alt={name} className="object-cover w-full h-full" />
-          {alert && (
-            <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded-full">
-              Atenção
-            </div>
-          )}
+    <Card className="lg:w-96 overflow-hidden py-0 shadow-md transition-all hover:shadow-lg hover:translate-y-[-2px]">
+      <CardHeader className="p-0">
+        <figure className="w-full h-48">
+          <Image
+            src={plant.imageUrl}
+            alt={plant.name}
+            width={200}
+            height={200}
+            className="w-full h-full object-cover"
+          />
+        </figure>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        <div>
+          <p className="text-2xl font-semibold">{plant.name}</p>
+          <p className="text-sm text-muted-foreground">{plant.species}</p>
         </div>
-        <CardHeader className="mb-4">
-          <CardTitle>{name}</CardTitle>
-          <CardDescription>{species}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Droplet className="h-4 w-4 text-blue-500" />
-                <span className="text-sm">Umidade</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-32 h-2 bg-muted rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${moisture > 60 ? "bg-plant" : moisture > 30 ? "bg-amber-500" : "bg-red-500"}`}
-                    style={{ width: `${moisture}%` }}
-                  />
-                </div>
-                <span className="ml-2 text-sm font-medium">{moisture}%</span>
-              </div>
+
+        {/* Display plant details from MQTT*/}
+        <div className="flex flex-col gap-2">
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex items-center space-x-1">
+              <Droplet className="size-4 text-blue-500" />
+              <p>Umidade</p>
             </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Thermometer className="h-4 w-4 text-orange-500" />
-                <span className="text-sm">Última Irrigação</span>
-              </div>
-              <span className="text-sm">{lastWatered}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Info className="h-4 w-4 text-plant" />
-                <span className="text-sm">Status</span>
-              </div>
-              <span className={`text-sm font-medium ${status === "Saudável" ? "text-plant" : "text-amber-500"}`}>
-                {status}
-              </span>
+            <div className="flex items-center gap-4">
+              <Progress value={33} />
+              <p>%33</p>
             </div>
           </div>
-        </CardContent>
-      </Link>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline" size="sm" asChild>
-          <Link href={`/plant/${name.toLowerCase()}`}>
-            <Settings className="mr-2 h-4 w-4" />
-            Configurar
-          </Link>
-        </Button>
-        <Button size="sm">
-          <Droplet className="mr-2 h-4 w-4" />
-          Irrigar Agora
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-1">
+              <Thermometer className="size-4 text-orange-500" />
+              <p>Última irrigação</p>
+            </div>
+            <div>
+              <p>Hoje, 08:00</p>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex justify-between items-center gap-4 pb-4">
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="cursor-pointer">
+              <Cog /> Configurar
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="overflow-y-auto max-h-[90vh] lg:min-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Configurar planta</DialogTitle>
+              <DialogDescription>
+                Modifique os detalhes da sua planta.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Informações da Planta</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <AddPlantForm
+                    data={
+                      {
+                        ...plant,
+                        device: plant.device.macAddress,
+                      } as PlantFormSchema
+                    }
+                  />
+                </CardContent>
+              </Card>
+            </div>
+            <DialogFooter className="flex justify-end gap-2">
+              <DialogClose asChild>
+                <Button variant="outline">Cancelar</Button>
+              </DialogClose>
+              <Button type="submit" form="add-plant-form">
+                <Pen className="mr-px size-4" />
+                Editar Planta
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Button variant="default" className="cursor-pointer">
+          <Droplet className="text-secondary" /> Irrigar agora
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
