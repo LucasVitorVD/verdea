@@ -41,7 +41,6 @@ import z from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
-import confetti from "canvas-confetti";
 import { celebrations } from "@/lib/celebrations";
 
 const assignDeviceFormSchema = z.object({

@@ -10,7 +10,6 @@ import {
 import { ImagePlus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -79,7 +78,7 @@ export default function AddPlantForm({ data }: AddPlantFormProps) {
 
         return request.data as Device[];
       } catch (error) {
-        throw error;
+        toast.error("Erro ao carregar dispositivos.");
       }
     },
     refetchOnWindowFocus: false,
@@ -96,53 +95,59 @@ export default function AddPlantForm({ data }: AddPlantFormProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getUserPlants"] });
+      toast.success("Planta adicionada com sucesso!");
+    },
+    onError: (error: any) => {
+      console.error("Error adding plant:", error);
+
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Erro desconhecido. Por favor, tente novamente.";
+
+      toast.error("Erro ao adicionar planta.", {
+        description: errorMessage,
+        richColors: true,
+        style: {
+          background: "hsl(0 50% 45%)",
+          color: "white",
+          border: "1px solid hsl(0 50% 45%)",
+        },
+      });
     },
   });
 
   const onSubmit = async (data: PlantFormSchema) => {
-    try {
-      const frequencyMap = {
-        daily: 1,
-        "twice-daily": 2,
-        "every-other-day": 3,
-        weekly: 7,
-      };
+    const today = new Date();
+    const [hours, minutes] = data.wateringTime?.split(":") || [];
+    const wateringTime =
+      hours && minutes
+        ? new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            +hours,
+            +minutes
+          ).toISOString()
+        : null;
 
-      const today = new Date();
-      const [hours, minutes] = data.wateringTime?.split(":") || [];
-      const wateringTime =
-        hours && minutes
-          ? new Date(
-              today.getFullYear(),
-              today.getMonth(),
-              today.getDate(),
-              +hours,
-              +minutes
-            ).toISOString()
-          : null;
+    const image = data.image ? await handleUploadImage(data.image) : null;
 
-      const image = data.image ? await handleUploadImage(data.image) : null;
+    const newPlant: NewPlant = {
+      name: data.name,
+      species: data.species,
+      location: data.location,
+      notes: data.notes,
+      wateringTime: wateringTime,
+      wateringFrequency: data.wateringFrequency,
+      idealSoilMoisture: data.idealSoilMoisture,
+      imageUrl: image,
+      deviceMacAddress: data.device,
+    };
 
-      const newPlant: NewPlant = {
-        name: data.name,
-        species: data.species,
-        location: data.location,
-        notes: data.notes,
-        wateringTime: wateringTime,
-        wateringFrequency: data.wateringFrequency,
-        idealSoilMoisture: data.idealSoilMoisture,
-        imageUrl: image,
-        deviceMacAddress: data.device,
-      };
+    console.log("Submitting new plant:", newPlant);
 
-      console.log("Submitting new plant:", newPlant);
-
-      mutation.mutate(newPlant);
-      toast.success("Planta adicionada!");
-    } catch (error) {
-      console.error("Error adding plant:", error);
-      toast.error("Erro ao adicionar planta. Por favor, tente novamente.");
-    }
+    mutation.mutate(newPlant);
   };
 
   async function handleUploadImage(imageFile: File) {

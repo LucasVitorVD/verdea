@@ -1,10 +1,7 @@
 import {
   Droplet,
   Thermometer,
-  Info,
-  Settings,
   Cog,
-  Plus,
   Pen,
 } from "lucide-react";
 import { Button } from "../ui/button";
@@ -30,6 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import AddPlantForm from "../forms/AddPlantForm";
 import { PlantFormSchema } from "@/zod-schemas/form/plant";
+import PlantPlaceHolder from "@/public/images/plant-placeholder.jpg"
 
 interface Props {
   plant: Plant;
@@ -41,7 +39,7 @@ export default function PlantCard({ plant }: Props) {
       <CardHeader className="p-0">
         <figure className="w-full h-48">
           <Image
-            src={plant.imageUrl}
+            src={plant.imageUrl || PlantPlaceHolder}
             alt={plant.name}
             width={200}
             height={200}
@@ -83,12 +81,12 @@ export default function PlantCard({ plant }: Props) {
         <Dialog>
           <DialogTrigger asChild>
             <Button variant="outline" className="cursor-pointer">
-              <Cog /> Configurar
+              <Pen /> Editar
             </Button>
           </DialogTrigger>
           <DialogContent className="overflow-y-auto max-h-[90vh] lg:min-w-4xl">
             <DialogHeader>
-              <DialogTitle>Configurar planta</DialogTitle>
+              <DialogTitle>Editar planta</DialogTitle>
               <DialogDescription>
                 Modifique os detalhes da sua planta.
               </DialogDescription>
