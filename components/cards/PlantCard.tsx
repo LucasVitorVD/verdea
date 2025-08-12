@@ -1,10 +1,16 @@
+"use client";
+
 import {
   Droplet,
   Thermometer,
-  Cog,
   Pen,
+  Activity,
+  Calendar,
+  Edit,
+  Info,
+  Settings,
+  Trash2,
 } from "lucide-react";
-import { Button } from "../ui/button";
 import {
   Card,
   CardHeader,
@@ -15,25 +21,54 @@ import {
 import { Plant } from "@/interfaces/plant";
 import Image from "next/image";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
   DialogClose,
-  DialogHeader,
+  DialogContent,
+  DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
-import AddPlantForm from "../forms/AddPlantForm";
-import { PlantFormSchema } from "@/zod-schemas/form/plant";
-import PlantPlaceHolder from "@/public/images/plant-placeholder.jpg"
+import { Separator } from "@/components/ui/separator";
+import PlantPlaceHolder from "@/public/images/plant-placeholder.jpg";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axiosInstance from "@/lib/axios";
+import { toast } from "sonner";
+import PlantForm from "../forms/PlantForm";
 
 interface Props {
   plant: Plant;
 }
 
 export default function PlantCard({ plant }: Props) {
+  const queryClient = useQueryClient();
+
+  const deletePlantMutation = useMutation({
+    mutationFn: async (plantId: number) => {
+      return axiosInstance.delete(
+        process.env.NEXT_PUBLIC_API_URL + `/plant/delete/${plantId}`
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getUserPlants"] });
+      toast.success("Planta excluída!");
+    },
+    onError: () => {
+      toast.error("Não foi possível excluir a planta!");
+    },
+    retry: 2,
+  });
+
   return (
     <Card className="lg:w-96 overflow-hidden py-0 shadow-md transition-all hover:shadow-lg hover:translate-y-[-2px]">
       <CardHeader className="p-0">
@@ -78,48 +113,171 @@ export default function PlantCard({ plant }: Props) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between items-center gap-4 pb-4">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="cursor-pointer">
-              <Pen /> Editar
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline">
+              <Info className="h-4 w-4" />
+              Ver Detalhes
             </Button>
-          </DialogTrigger>
-          <DialogContent className="overflow-y-auto max-h-[90vh] lg:min-w-4xl">
-            <DialogHeader>
-              <DialogTitle>Editar planta</DialogTitle>
-              <DialogDescription>
-                Modifique os detalhes da sua planta.
-              </DialogDescription>
-            </DialogHeader>
+          </SheetTrigger>
+          <SheetContent className="w-[400px] sm:w-[540px]">
+            <SheetHeader>
+              <SheetTitle>Detalhes</SheetTitle>
+            </SheetHeader>
 
-            <div>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Informações da Planta</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <AddPlantForm
-                    data={
-                      {
-                        ...plant,
-                        device: plant.device.macAddress,
-                      } as PlantFormSchema
-                    }
-                  />
-                </CardContent>
-              </Card>
+            <Separator />
+
+            <div className="flex items-center gap-4 px-4">
+              <figure className="size-16">
+                <Image
+                  src={plant.imageUrl || PlantPlaceHolder}
+                  alt={plant.name}
+                  width={200}
+                  height={200}
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </figure>
+              <div>
+                <p>{plant.name}</p>
+                <p className="text-muted-foreground">{plant.species}</p>
+              </div>
             </div>
-            <DialogFooter className="flex justify-end gap-2">
-              <DialogClose asChild>
-                <Button variant="outline">Cancelar</Button>
-              </DialogClose>
-              <Button type="submit" form="add-plant-form">
-                <Pen className="mr-px size-4" />
-                Editar Planta
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+
+            <Separator />
+
+            <div className="mt-4 space-y-6">
+              <div className="px-4">
+                <h3 className="text-lg font-semibold mb-3">
+                  Condições Ambientais
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Droplet className="h-5 w-5 text-blue-500" />
+                      <span>Umidade do Solo</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className={`h-full ${
+                            plant.idealSoilMoisture > 60
+                              ? "bg-plant"
+                              : plant.idealSoilMoisture > 30
+                              ? "bg-amber-500"
+                              : "bg-red-500"
+                          }`}
+                          style={{ width: `${plant.idealSoilMoisture}%` }}
+                        />
+                      </div>
+                      <span className="font-medium">
+                        {plant.idealSoilMoisture}%
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Histórico */}
+              <div className="px-4">
+                <h3 className="text-lg font-semibold mb-3">
+                  Histórico Recente
+                </h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 text-sm">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span>Última irrigação: Hoje, 08:00</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <Activity className="h-4 w-4 text-muted-foreground" />
+                    <span>Próxima irrigação: Amanhã, 08:00</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-sm">
+                    <Settings className="h-4 w-4 text-muted-foreground" />
+                    <span>Última configuração: Há 3 dias</span>
+                  </div>
+                </div>
+              </div>
+
+              <Separator />
+
+              <div className="flex items-center gap-2 px-4">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="flex-1 cursor-pointer">
+                      <Edit />
+                      Editar
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="overflow-y-auto max-h-[90vh] lg:min-w-4xl">
+                    <DialogHeader>
+                      <DialogTitle>Editar planta</DialogTitle>
+                      <DialogDescription>
+                        Edite os detalhes da sua planta.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <div>
+                      <Card>
+                        <CardHeader>
+                          <CardTitle>Informações da Planta</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                          <PlantForm data={plant} />
+                        </CardContent>
+                      </Card>
+                    </div>
+                    <DialogFooter className="flex justify-end gap-2">
+                      <DialogClose asChild>
+                        <Button variant="outline">Cancelar</Button>
+                      </DialogClose>
+                      <Button type="submit" form="add-plant-form">
+                        <Pen className="mr-px size-4" />
+                        Editar Planta
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog>
+                  <DialogTrigger className="flex-1 cursor-pointer" asChild>
+                    <Button variant="destructive">
+                      <Trash2 />
+                      Excluir
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Você tem certeza?</DialogTitle>
+                      <DialogDescription>
+                        Esta ação não pode ser desfeita. Isso excluirá
+                        permanentemente a planta e removerá seus dados.
+                      </DialogDescription>
+                    </DialogHeader>
+
+                    <DialogFooter>
+                      <DialogClose asChild>
+                        <Button variant="outline">Fechar</Button>
+                      </DialogClose>
+                      <DialogClose
+                        onClick={() => deletePlantMutation.mutate(plant.id!)}
+                        asChild
+                      >
+                        <Button
+                          variant="destructive"
+                          className="cursor-pointer"
+                        >
+                          Excluir
+                        </Button>
+                      </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
         <Button variant="default" className="cursor-pointer">
           <Droplet className="text-secondary" /> Irrigar agora
         </Button>

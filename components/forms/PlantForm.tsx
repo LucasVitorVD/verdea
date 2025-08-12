@@ -32,30 +32,19 @@ import EmptyState from "../empty-state";
 import EmptyStateIllustration from "@/public/images/illustrations/undraw_gardening.svg";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { Plant } from "@/interfaces/plant";
 
-type NewPlant = {
-  name: string;
-  species: string;
-  location: string;
-  notes?: string;
-  wateringFrequency: number;
-  wateringTime: string | null;
-  idealSoilMoisture: number;
-  deviceMacAddress: string;
-  imageUrl: string;
-};
-
-interface AddPlantFormProps {
-  data?: PlantFormSchema;
+interface PlantFormProps {
+  data?: Plant;
 }
 
-export default function AddPlantForm({ data }: AddPlantFormProps) {
+export default function PlantForm({ data }: PlantFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const form = useForm<PlantFormSchema>({
     resolver: zodResolver(plantFormSchema),
-    defaultValues: data || {
+    defaultValues: data as Omit<Plant, "device"> || {
       name: "",
       species: "",
       location: "",
@@ -85,9 +74,9 @@ export default function AddPlantForm({ data }: AddPlantFormProps) {
   });
 
   const mutation = useMutation({
-    mutationFn: async (plantData: NewPlant) => {
+    mutationFn: async (plantData: Omit<Plant, "device">) => {
       const response = await axiosInstance.post(
-        process.env.NEXT_PUBLIC_API_URL + "/plant/add",
+        `${process.env.NEXT_PUBLIC_API_URL}/plant` + !data ? "/add" : `/edit/${plantData.id}`,
         plantData
       );
 
@@ -95,17 +84,15 @@ export default function AddPlantForm({ data }: AddPlantFormProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getUserPlants"] });
-      toast.success("Planta adicionada com sucesso!");
+      toast.success(`Planta ${!data ? 'adicionada' : 'editada'} com sucesso!`);
     },
     onError: (error: any) => {
-      console.error("Error adding plant:", error);
-
       const errorMessage =
         error?.response?.data?.message ||
         error?.message ||
         "Erro desconhecido. Por favor, tente novamente.";
 
-      toast.error("Erro ao adicionar planta.", {
+      toast.error(`Erro ao ${!data ? "adicionar" : "editar"} planta.`, {
         description: errorMessage,
         richColors: true,
         style: {
@@ -133,19 +120,19 @@ export default function AddPlantForm({ data }: AddPlantFormProps) {
 
     const image = data.image ? await handleUploadImage(data.image) : null;
 
-    const newPlant: NewPlant = {
+    const newPlant = {
       name: data.name,
       species: data.species,
       location: data.location,
-      notes: data.notes,
-      wateringTime: wateringTime,
+      notes: data.notes ?? "",
+      wateringTime: wateringTime ?? "",
       wateringFrequency: data.wateringFrequency,
       idealSoilMoisture: data.idealSoilMoisture,
       imageUrl: image,
       deviceMacAddress: data.device,
+    } as Omit<Plant, "id" | "device"> & {
+      deviceMacAddress: string;
     };
-
-    console.log("Submitting new plant:", newPlant);
 
     mutation.mutate(newPlant);
   };

@@ -85,7 +85,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       return false;
     },
-    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
 

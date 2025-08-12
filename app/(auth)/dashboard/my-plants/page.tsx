@@ -1,7 +1,4 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
-import AddPlantForm from "@/components/forms/AddPlantForm";
 import { PulsatingButton } from "@/components/magicui/pulsating-button";
 import PlantGrid from "@/components/plant-grid/PlantGrid";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -16,31 +13,9 @@ import {
   DialogHeader,
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { Plant } from "@/interfaces/plant";
-import axiosInstance from "@/lib/axios";
-import { toast } from "sonner";
+import PlantForm from "@/components/forms/PlantForm";
 
 export default function MyPlantsPage() {
-  const plantsQuery = useQuery<Plant[]>({
-    queryKey: ["getUserPlants"],
-    queryFn: async () => {
-      try {
-        const request = await axiosInstance.get(
-          process.env.NEXT_PUBLIC_API_URL + "/plant/all"
-        );
-
-        return request.data as Plant[];
-      } catch (error) {
-        toast.error(
-          "Erro ao carregar suas plantas. Tente novamente mais tarde."
-        );
-        return [];
-      }
-    },
-    refetchOnWindowFocus: false,
-  });
-
   return (
     <section className="flex flex-col flex-1 py-4 px-4 gap-12 md:p-6">
       <div className="flex justify-between items-center flex-wrap gap-4">
@@ -54,7 +29,7 @@ export default function MyPlantsPage() {
         <div className="w-full md:w-auto">
           <Dialog>
             <DialogTrigger asChild>
-              <PulsatingButton pulseColor={plantsQuery.data?.length === 0 ? "rgba(110, 145, 123, 0.3)" : "rgba(0, 0, 0, 0)"}>
+              <PulsatingButton pulseColor="rgba(110, 145, 123, 0.3)">
                 <div className="flex items-center gap-2">
                   <Plus className="mr-px size-4" />
                   Adicionar Planta
@@ -76,7 +51,7 @@ export default function MyPlantsPage() {
                     <CardTitle>Informações da Planta</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <AddPlantForm />
+                    <PlantForm />
                   </CardContent>
                 </Card>
               </div>
@@ -94,13 +69,7 @@ export default function MyPlantsPage() {
         </div>
       </div>
 
-      {plantsQuery.isLoading ? (
-        <div className="flex flex-1 items-center justify-center">
-          <p>Carregando suas plantas...</p>
-        </div>
-      ) : (
-        <PlantGrid plants={plantsQuery.data ?? []} />
-      )}
+      <PlantGrid />
     </section>
   );
 }

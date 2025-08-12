@@ -1,7 +1,7 @@
 import { Device } from "./device"
 
 interface Plant {
-  id: number
+  id?: number
   name: string
   species: string
   location: string
