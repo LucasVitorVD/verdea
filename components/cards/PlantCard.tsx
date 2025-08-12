@@ -45,12 +45,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import PlantForm from "../forms/PlantForm";
+import { useState } from "react";
 
 interface Props {
   plant: Plant;
 }
 
 export default function PlantCard({ plant }: Props) {
+  const [open, setOpen] = useState(false)
   const queryClient = useQueryClient();
 
   const deletePlantMutation = useMutation({
@@ -203,7 +205,7 @@ export default function PlantCard({ plant }: Props) {
               <Separator />
 
               <div className="flex items-center gap-2 px-4">
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                   <DialogTrigger asChild>
                     <Button variant="outline" className="flex-1 cursor-pointer">
                       <Edit />
@@ -224,7 +226,7 @@ export default function PlantCard({ plant }: Props) {
                           <CardTitle>Informações da Planta</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                          <PlantForm data={plant} />
+                          <PlantForm data={plant} onSuccess={() => setOpen(false)} />
                         </CardContent>
                       </Card>
                     </div>

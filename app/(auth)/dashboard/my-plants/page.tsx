@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button";
 import { PulsatingButton } from "@/components/magicui/pulsating-button";
 import PlantGrid from "@/components/plant-grid/PlantGrid";
@@ -14,8 +16,11 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import PlantForm from "@/components/forms/PlantForm";
+import { useState } from "react";
 
 export default function MyPlantsPage() {
+  const [open, setOpen] = useState(false);
+
   return (
     <section className="flex flex-col flex-1 py-4 px-4 gap-12 md:p-6">
       <div className="flex justify-between items-center flex-wrap gap-4">
@@ -27,7 +32,7 @@ export default function MyPlantsPage() {
         </div>
 
         <div className="w-full md:w-auto">
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <PulsatingButton pulseColor="rgba(110, 145, 123, 0.3)">
                 <div className="flex items-center gap-2">
@@ -51,7 +56,7 @@ export default function MyPlantsPage() {
                     <CardTitle>Informações da Planta</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
-                    <PlantForm />
+                    <PlantForm onSuccess={() => setOpen(false)} />
                   </CardContent>
                 </Card>
               </div>

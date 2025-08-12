@@ -36,25 +36,34 @@ import { Plant } from "@/interfaces/plant";
 
 interface PlantFormProps {
   data?: Plant;
+  onSuccess?: () => void;
 }
 
-export default function PlantForm({ data }: PlantFormProps) {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+export default function PlantForm({ data, onSuccess }: PlantFormProps) {
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    data?.imageUrl ?? null
+  );
   const queryClient = useQueryClient();
 
   const form = useForm<PlantFormSchema>({
     resolver: zodResolver(plantFormSchema),
-    defaultValues: data as Omit<Plant, "device"> || {
-      name: "",
-      species: "",
-      location: "",
-      notes: "",
-      wateringFrequency: 0,
-      wateringTime: "",
-      idealSoilMoisture: 0,
-      device: "",
-      image: null,
-    },
+    defaultValues: data
+      ? {
+          ...data,
+          image: null,
+          device: data.device?.macAddress ?? "",
+        }
+      : {
+          name: "",
+          species: "",
+          location: "",
+          notes: "",
+          wateringFrequency: 0,
+          wateringTime: "",
+          idealSoilMoisture: 0,
+          device: "",
+          image: null,
+        },
   });
 
   const devicesQuery = useQuery({
@@ -75,16 +84,21 @@ export default function PlantForm({ data }: PlantFormProps) {
 
   const mutation = useMutation({
     mutationFn: async (plantData: Omit<Plant, "device">) => {
-      const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/plant` + !data ? "/add" : `/edit/${plantData.id}`,
-        plantData
-      );
-
-      return response.data;
+      if (data) {
+        return axiosInstance.patch(
+          process.env.NEXT_PUBLIC_API_URL + `/plant/update/${data.id}`,
+          plantData
+        )
+      } else {
+        return axiosInstance.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/plant/add`,
+          plantData
+        );
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["getUserPlants"] });
-      toast.success(`Planta ${!data ? 'adicionada' : 'editada'} com sucesso!`);
+      toast.success(`Planta ${data ? "editada" : "adicionada"} com sucesso!`);
     },
     onError: (error: any) => {
       const errorMessage =
@@ -92,7 +106,7 @@ export default function PlantForm({ data }: PlantFormProps) {
         error?.message ||
         "Erro desconhecido. Por favor, tente novamente.";
 
-      toast.error(`Erro ao ${!data ? "adicionar" : "editar"} planta.`, {
+      toast.error(`Erro ao ${data ? "editar" : "adicionar"} planta.`, {
         description: errorMessage,
         richColors: true,
         style: {
@@ -135,6 +149,8 @@ export default function PlantForm({ data }: PlantFormProps) {
     };
 
     mutation.mutate(newPlant);
+
+    if (onSuccess) onSuccess();
   };
 
   async function handleUploadImage(imageFile: File) {
@@ -343,6 +359,7 @@ export default function PlantForm({ data }: PlantFormProps) {
                       type="time"
                       id="time-picker"
                       step="1"
+                      defaultValue="10:30:00"
                       className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                       {...field}
                     />
