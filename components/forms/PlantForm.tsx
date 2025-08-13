@@ -33,6 +33,7 @@ import EmptyStateIllustration from "@/public/images/illustrations/undraw_gardeni
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plant } from "@/interfaces/plant";
+import TimePicker from "./TimePicker";
 
 interface PlantFormProps {
   data?: Plant;
@@ -58,8 +59,8 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
           species: "",
           location: "",
           notes: "",
-          wateringFrequency: 0,
-          wateringTime: "",
+          wateringFrequency: "once_a_day",
+          wateringTime: "10:30",
           idealSoilMoisture: 0,
           device: "",
           image: null,
@@ -88,7 +89,7 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
         return axiosInstance.patch(
           process.env.NEXT_PUBLIC_API_URL + `/plant/update/${data.id}`,
           plantData
-        )
+        );
       } else {
         return axiosInstance.post(
           `${process.env.NEXT_PUBLIC_API_URL}/plant/add`,
@@ -119,19 +120,6 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
   });
 
   const onSubmit = async (data: PlantFormSchema) => {
-    const today = new Date();
-    const [hours, minutes] = data.wateringTime?.split(":") || [];
-    const wateringTime =
-      hours && minutes
-        ? new Date(
-            today.getFullYear(),
-            today.getMonth(),
-            today.getDate(),
-            +hours,
-            +minutes
-          ).toISOString()
-        : null;
-
     const image = data.image ? await handleUploadImage(data.image) : null;
 
     const newPlant = {
@@ -139,7 +127,7 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
       species: data.species,
       location: data.location,
       notes: data.notes ?? "",
-      wateringTime: wateringTime ?? "",
+      wateringTime: data.wateringTime ?? "",
       wateringFrequency: data.wateringFrequency,
       idealSoilMoisture: data.idealSoilMoisture,
       imageUrl: image,
@@ -149,6 +137,8 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
     };
 
     mutation.mutate(newPlant);
+
+    console.log(newPlant);
 
     if (onSuccess) onSuccess();
   };
@@ -327,8 +317,8 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
                 <FormItem>
                   <FormLabel>Frequência de Irrigação</FormLabel>
                   <Select
-                    onValueChange={(value) => field.onChange(Number(value))}
-                    defaultValue={String(field.value)}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
                   >
                     <FormControl className="w-full">
                       <SelectTrigger>
@@ -336,10 +326,12 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="1">1x ao dia</SelectItem>
-                      <SelectItem value="2">2x ao dia</SelectItem>
-                      <SelectItem value="3">A cada 2 dias</SelectItem>
-                      <SelectItem value="4">Semanal</SelectItem>
+                      <SelectItem value="once_a_day">1x ao dia</SelectItem>
+                      <SelectItem value="twice_a_day">2x ao dia</SelectItem>
+                      <SelectItem value="every_2_days">
+                        A cada 2 dias
+                      </SelectItem>
+                      <SelectItem value="weekly">Semanal</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -355,13 +347,10 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
                 <FormItem>
                   <FormLabel>Horário de Irrigação</FormLabel>
                   <FormControl>
-                    <Input
-                      type="time"
-                      id="time-picker"
-                      step="1"
-                      defaultValue="10:30:00"
-                      className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                      {...field}
+                    <TimePicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      className="w-full"
                     />
                   </FormControl>
                   <FormMessage />
