@@ -120,7 +120,9 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
   });
 
   const onSubmit = async (data: PlantFormSchema) => {
-    const image = data.image ? await handleUploadImage(data.image) : null;
+    const image = data.image
+  ? await handleUploadImage(data.image)
+  : imagePreview;
 
     const newPlant = {
       name: data.name,
