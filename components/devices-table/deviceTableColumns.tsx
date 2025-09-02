@@ -2,10 +2,18 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import type { Device } from "@/interfaces/device";
-import DeviceDetailsDialog from "./DeviceDetailsDialog";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import Actions from "./Actions";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import DeviceDetails from "./DeviceDetails";
+import { Eye } from "lucide-react";
 
 export const deviceTableColumns: ColumnDef<Device>[] = [
   {
@@ -18,14 +26,17 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
     accessorFn: (row) => row.name,
     header: "Nome",
     cell: ({ row }) => (
-      <DeviceDetailsDialog
-        dialogTrigger={
-          <div className="text-primary cursor-pointer hover:underline">
-            {row.original.name}
-          </div>
-        }
-        device={row.original}
-      />
+      <Sheet>
+        <SheetTrigger className="text-primary cursor-pointer hover:underline">
+          {row.original.name}
+        </SheetTrigger>
+        <SheetContent className="overflow-y-scroll">
+          <SheetHeader>
+            <SheetTitle>Detalhes</SheetTitle>
+          </SheetHeader>
+          <DeviceDetails device={row.original} />
+        </SheetContent>
+      </Sheet>
     ),
     filterFn: "includesString",
   },
@@ -39,7 +50,7 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
     header: "Registrado em",
     cell: ({ row }) => {
       const date = new Date(row.original.createdAt);
-      const formatted = format(date, "dd/MM/yyyy HH:mm", { locale: ptBR });
+      const formatted = format(date, "dd/MM/yyyy", { locale: ptBR });
 
       return <div>{formatted}</div>;
     },
@@ -50,7 +61,20 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
       const device = row.original;
 
       return (
-        <Actions device={device} />
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button className="cursor-pointer">
+              <Eye />
+              Ver detalhes
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="overflow-y-scroll">
+            <SheetHeader>
+              <SheetTitle>Detalhes</SheetTitle>
+            </SheetHeader>
+            <DeviceDetails device={device} />
+          </SheetContent>
+        </Sheet>
       );
     },
   },

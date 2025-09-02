@@ -10,14 +10,13 @@ import {
   getFilteredRowModel,
   ColumnFiltersState,
 } from "@tanstack/react-table";
-import {
-  Card,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { deviceTableColumns } from "./deviceTableColumns";
 import { DataTable } from "@/components/data-table/index";
 import axiosInstance from "@/lib/axios";
 import { Search } from "lucide-react";
+import EmptyState from "../empty-state";
+import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
 
 export default function DevicesTable() {
   const [page, setPage] = useState(1);
@@ -25,7 +24,7 @@ export default function DevicesTable() {
     { id: "status", value: "signed" },
   ]);
 
-  const devicesQuery = useQuery({
+  const { data: devices, isLoading } = useQuery({
     queryKey: ["getUserDevices"],
     queryFn: async () => {
       try {
@@ -42,7 +41,7 @@ export default function DevicesTable() {
   });
 
   const table = useReactTable({
-    data: devicesQuery.data ?? [],
+    data: devices ?? [],
     columns: deviceTableColumns,
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -54,6 +53,17 @@ export default function DevicesTable() {
     },
   });
 
+  if (devices?.length === 0) {
+    return (
+      <EmptyState
+        title="Nenhum dispositivo encontrado… por enquanto!"
+        description="Adicione seu primeiro dispositivo e acompanhe tudo com a ajuda da Verdea, em tempo real."
+        imgSrc={EmptyIllustration}
+        imgAlt="Ilustração de dispositivo não encontrado"
+      />
+    );
+  }
+
   return (
     <Card>
       <CardContent>
@@ -64,8 +74,9 @@ export default function DevicesTable() {
               <Input
                 placeholder="Filtrar por dispositivo..."
                 value={
-                  (table.getColumn("device-name")?.getFilterValue() as string) ??
-                  ""
+                  (table
+                    .getColumn("device-name")
+                    ?.getFilterValue() as string) ?? ""
                 }
                 onChange={(event) =>
                   table
@@ -81,7 +92,11 @@ export default function DevicesTable() {
             columns={deviceTableColumns}
             isLoading={false}
           />
-          <DataTable.Pagination>
+
+          <div className="text-muted-foreground flex-1 text-sm mt-2">
+            <p>Total: {devices?.length}</p>
+          </div>
+          {/* <DataTable.Pagination>
             <DataTable.PaginationAction
               variant="outline"
               size="sm"
@@ -96,7 +111,7 @@ export default function DevicesTable() {
             >
               Próximo
             </DataTable.PaginationAction>
-          </DataTable.Pagination>
+          </DataTable.Pagination> */}
         </DataTable.Root>
       </CardContent>
     </Card>

@@ -11,7 +11,6 @@ import { flexRender } from "@tanstack/react-table";
 import Spinner from "../spinner/Spinner";
 import type { Device } from "@/interfaces/device";
 import EmptyState from "../empty-state";
-import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
 
 interface DataTableProps<TData, TValue> {
   table: TansTackTable<Device>;
@@ -46,16 +45,13 @@ export function DataTableTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {isLoading && (
+          {isLoading ? (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-64 text-center">
                 <Spinner />
               </TableCell>
             </TableRow>
-          )}
-
-          {!isLoading &&
-            table.getRowModel().rows?.length &&
+          ) : (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -67,19 +63,7 @@ export function DataTableTable<TData, TValue>({
                   </TableCell>
                 ))}
               </TableRow>
-            ))}
-
-          {!isLoading && !table.getRowModel().rows?.length && (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-26 text-center">
-                <EmptyState
-                  title="Nenhum dispositivo encontrado… por enquanto!"
-                  description="Adicione seu primeiro dispositivo e acompanhe tudo com a ajuda da Verdea, em tempo real."
-                  imgSrc={EmptyIllustration}
-                  imgAlt="Ilustração de dispositivo não encontrado"
-                />
-              </TableCell>
-            </TableRow>
+            ))
           )}
         </TableBody>
       </Table>

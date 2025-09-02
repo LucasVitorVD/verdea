@@ -12,7 +12,7 @@ interface Plant {
   wateringFrequency: WateringFrequency
   idealSoilMoisture: number
   imageUrl: string
-  device: Device
+  deviceSummary: Pick<Device, 'id' | 'name' | 'macAddress' | 'createdAt'>
 }
 
 export type { Plant }

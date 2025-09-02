@@ -57,7 +57,7 @@ export default function AddDeviceDialog() {
   const [openDialog, setOpenDialog] = useState(false);
   const queryClient = useQueryClient();
   const retryCountRef = useRef(0);
-  const buttonRef = useRef<HTMLButtonElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const form = useForm<z.infer<typeof assignDeviceFormSchema>>({
     resolver: zodResolver(assignDeviceFormSchema),
@@ -278,8 +278,11 @@ export default function AddDeviceDialog() {
                   <div>
                     <p className="text-sm font-semibold">Importante:</p>
                     <p className="text-sm">
-                      Certifique-se de que o dispositivo está próximo ao seu
-                      roteador Wi-Fi para melhor sinal.
+                      Se o dispositivo já foi configurado anteriormente, ele
+                      lembrará as credenciais do Wi-Fi e se conectará
+                      automaticamente ao ligar. Nesse caso, basta ligar o
+                      dispositivo, aguardar a conexão e adiciná-lo na última
+                      etapa.
                     </p>
                   </div>
                 </CardContent>
