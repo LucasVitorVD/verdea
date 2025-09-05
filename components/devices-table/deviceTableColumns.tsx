@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import DeviceDetails from "./DeviceDetails";
-import { Eye } from "lucide-react";
+import { Eye, BadgeCheckIcon, BadgeXIcon } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export const deviceTableColumns: ColumnDef<Device>[] = [
   {
@@ -44,6 +45,16 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
     id: "mac-address",
     header: "MAC",
     cell: ({ row }) => <div>{row.original.macAddress}</div>,
+  },
+  {
+    id: "isOnline",
+    header: "Status",
+    cell: ({ row }) => (
+      <Badge variant={row.original.isOnline ? "default" : "destructive"}>
+        {row.original.isOnline ? <BadgeCheckIcon /> : <BadgeXIcon />}
+        {row.original.isOnline ? "Online" : "Offline"}
+      </Badge>
+    ),
   },
   {
     id: "createdAt",

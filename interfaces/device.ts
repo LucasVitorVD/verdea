@@ -6,6 +6,7 @@ interface Device {
   macAddress: string,
   currentIp: string,
   createdAt: string,
+  isOnline: string,
   plantSummary: Pick<Plant, 'id' | 'name' | 'species' | 'imageUrl'>
 }
 
