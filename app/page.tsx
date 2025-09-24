@@ -25,19 +25,13 @@ const featuresCards = [
   {
     title: "Irrigação automática",
     description:
-      "Sistema inteligente que irriga suas plantas automaticamente com base nas necessidades específicas de cada espécie.",
+      "Sistema inteligente que irriga suas plantas automaticamente com base nas necessidades específicas de cada planta.",
     icon: <Droplet className="text-primary size-7" />,
-  },
-  {
-    title: "Dicas Personalizadas",
-    description:
-      "Receba dicas e recomendações personalizadas para cada planta, geradas por IA com base em dados reais.",
-    icon: <Leaf className="text-primary size-7" />,
   },
   {
     title: "Monitoramento em Tempo Real",
     description:
-      "Acompanhe a umidade, temperatura e status de irrigação das suas plantas em tempo real.",
+      "Acompanhe o status de irrigação das suas plantas em tempo real.",
     icon: <Zap className="text-primary size-7" />,
   },
   {
@@ -47,15 +41,9 @@ const featuresCards = [
     icon: <Smartphone className="text-primary size-7" />,
   },
   {
-    title: "Fácil Configuração",
-    description:
-      "Configure o sistema em minutos, sem necessidade de conhecimentos técnicos avançados.",
-    icon: <Check className="text-primary size-7" />,
-  },
-  {
     title: "Economia de Água",
     description:
-      "Economize água irrigando suas plantas apenas quando necessário, na quantidade ideal.",
+      "Economize água irrigando suas plantas apenas quando necessário.",
     icon: <Droplets className="text-primary size-7" />,
   },
 ];
@@ -135,7 +123,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 container">
+          <div className="grid md:grid-cols-2 gap-8 container">
             {featuresCards.map((feature) => (
               <Card className="flex flex-col gap-4" key={feature.title}>
                 <CardHeader className="space-y-2">
@@ -192,8 +180,8 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Adicione suas plantas ao sistema, informando espécie e
-                  localização.
+                  Adicione suas plantas ao sistema, informando dados como espécie e
+                  dispositivo.
                 </p>
               </CardContent>
             </Card>
@@ -358,17 +346,6 @@ export default function Home() {
 
               <AccordionItem value="item-4">
                 <AccordionTrigger className="text-left text-xl font-medium">
-                  Como o sistema de IA gera dicas personalizadas?
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
-                  Nossa IA analisa dados de umidade, temperatura e histórico de
-                  irrigação, combinando com informações específicas sobre cada
-                  espécie para gerar recomendações precisas.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-5">
-                <AccordionTrigger className="text-left text-xl font-medium">
                   O Verdea é difícil de instalar?
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
@@ -396,7 +373,7 @@ export default function Home() {
             href="/register"
             className={buttonVariants({ size: "lg", variant: "outline" })}
           >
-            Começar Gratuitamente
+            Registre-se
             <ArrowRight />
           </Link>
         </section>
