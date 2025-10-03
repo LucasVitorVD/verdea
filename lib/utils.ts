@@ -13,3 +13,8 @@ export function getCsrfToken() {
 
   return cookieValue ? decodeURIComponent(cookieValue) : null;
 }
+
+export function timeStringToMinutes(time: string): number {
+  const [hours, minutes] = time.split(":").map(Number);
+  return hours * 60 + minutes;
+}

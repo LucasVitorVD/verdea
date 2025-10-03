@@ -7,7 +7,7 @@ interface Device {
   currentIp: string,
   createdAt: string,
   isOnline: string,
-  plantSummary: Pick<Plant, 'id' | 'name' | 'species' | 'imageUrl'>
+  plantSummary: Pick<Plant, 'id' | 'name' | 'species' | 'imageUrl' | 'mode'>
 }
 
 export type { Device }

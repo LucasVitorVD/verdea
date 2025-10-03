@@ -7,9 +7,9 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { ImagePlus } from "lucide-react";
+import { Clock, ImagePlus, Zap } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Form,
   FormControl,
@@ -34,6 +34,8 @@ import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plant } from "@/interfaces/plant";
 import TimePicker from "./TimePicker";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface PlantFormProps {
   data?: Plant;
@@ -52,7 +54,9 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
       ? {
           ...data,
           image: null,
-          device: data.device?.macAddress ?? "",
+          device: data.deviceSummary?.macAddress ?? "",
+          mode: data.mode ?? "AUTO",
+          wateringTimes: data.wateringTimes ?? [],
         }
       : {
           name: "",
@@ -60,12 +64,16 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
           location: "",
           notes: "",
           wateringFrequency: "once_a_day",
-          wateringTime: "10:30",
+          wateringTimes: ["10:30", "18:30"],
           idealSoilMoisture: 0,
           device: "",
           image: null,
+          mode: "AUTO",
         },
   });
+
+  const mode = form.watch("mode");
+  const frequency = form.watch("wateringFrequency");
 
   const devicesQuery = useQuery({
     queryKey: ["getUserDevices"],
@@ -121,18 +129,33 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
 
   const onSubmit = async (data: PlantFormSchema) => {
     const image = data.image
-  ? await handleUploadImage(data.image)
-  : imagePreview;
+      ? await handleUploadImage(data.image)
+      : imagePreview;
+
+    if (data.wateringFrequency === "once_a_day") {
+      data.wateringTimes = [data.wateringTimes![0]];
+    } else if (data.wateringFrequency !== "twice_a_day") {
+      data.wateringTimes = [];
+    }
+
+    const mode = data.mode;
+
+    if (mode === "AUTO") {
+      data.wateringFrequency = undefined;
+      data.wateringTimes = [];
+      data.idealSoilMoisture = undefined;
+    }
 
     const newPlant = {
+      imageUrl: image,
       name: data.name,
       species: data.species,
       location: data.location,
       notes: data.notes ?? "",
-      wateringTime: data.wateringTime ?? "",
-      wateringFrequency: data.wateringFrequency,
-      idealSoilMoisture: data.idealSoilMoisture,
-      imageUrl: image,
+      mode: data.mode,
+      wateringTimes: data.wateringTimes ?? [],
+      wateringFrequency: data.wateringFrequency ?? null,
+      idealSoilMoisture: data.idealSoilMoisture ?? 30,
       deviceMacAddress: data.device,
     } as Omit<Plant, "id" | "device"> & {
       deviceMacAddress: string;
@@ -310,85 +333,180 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
           <h3 className="text-lg font-medium mb-4">
             Configurações de Irrigação
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Frequência */}
-            <FormField
-              control={form.control}
-              name="wateringFrequency"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Frequência de Irrigação</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+          <FormField
+            control={form.control}
+            name="mode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tipo de Irrigação</FormLabel>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex flex-col lg:flex-row items-center w-full mb-4"
+                >
+                  <div
+                    className={`flex items-center space-x-4 border p-4 rounded-lg w-full cursor-pointer transition-all ${
+                      field.value === "AUTO" ? "border-primary" : "border-muted"
+                    }`}
                   >
-                    <FormControl className="w-full">
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione a frequência" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="once_a_day">1x ao dia</SelectItem>
-                      <SelectItem value="twice_a_day">2x ao dia</SelectItem>
-                      <SelectItem value="every_2_days">
-                        A cada 2 dias
-                      </SelectItem>
-                      <SelectItem value="weekly">Semanal</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Horário */}
-            <FormField
-              control={form.control}
-              name="wateringTime"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Horário de Irrigação</FormLabel>
-                  <FormControl>
-                    <TimePicker
-                      value={field.value}
-                      onChange={field.onChange}
-                      className="w-full"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Umidade */}
-            <FormField
-              control={form.control}
-              name="idealSoilMoisture"
-              render={({ field }) => (
-                <FormItem className="md:col-span-2">
-                  <FormLabel>Nível Mínimo de Umidade</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center gap-4">
-                      <Slider
-                        value={[field.value ?? 0]}
-                        onValueChange={(val) => field.onChange(val[0])}
-                        max={100}
-                        step={1}
-                      />
-                      <span className="w-12 text-center font-medium">
-                        {field.value}%
-                      </span>
+                    <RadioGroupItem value="AUTO" id="AUTO" />
+                    <Zap className="h-4 w-4 text-green-600" />
+                    <div>
+                      <Label htmlFor="AUTO">Automático</Label>
+                      <p className="text-muted-foreground text-sm">
+                        Irriga quando o solo estiver seco
+                      </p>
                     </div>
-                  </FormControl>
-                  <FormDescription>
-                    A irrigação automática será acionada quando a umidade
-                    estiver abaixo deste valor.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+                  </div>
+
+                  <div
+                    className={`flex items-center space-x-4 border p-4 rounded-lg w-full cursor-pointer transition-all ${
+                      field.value === "SCHEDULED"
+                        ? "border-primary"
+                        : "border-muted"
+                    }`}
+                  >
+                    <RadioGroupItem value="SCHEDULED" id="SCHEDULED" />
+                    <Clock className="h-4 w-4 text-blue-600" />
+                    <div>
+                      <Label htmlFor="SCHEDULED">Programado</Label>
+                      <p className="text-muted-foreground text-sm">
+                        Define horários específicos
+                      </p>
+                    </div>
+                  </div>
+                </RadioGroup>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {mode === "SCHEDULED" && (
+            <div className="flex flex-col gap-4">
+              {/* Frequência */}
+              <FormField
+                control={form.control}
+                name="wateringFrequency"
+                render={({ field }) => (
+                  <FormItem className="col-span-2">
+                    <FormLabel>Frequência de Irrigação</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl className="w-full">
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione a frequência" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="once_a_day">1x ao dia</SelectItem>
+                        <SelectItem value="twice_a_day">2x ao dia</SelectItem>
+                        <SelectItem value="every_2_days">
+                          A cada 2 dias
+                        </SelectItem>
+                        <SelectItem value="weekly">Semanal</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {frequency !== "twice_a_day" && (
+                <FormField
+                  control={form.control}
+                  name="wateringTimes.0"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Horário de Irrigação</FormLabel>
+                      <FormControl>
+                        <TimePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               )}
-            />
-          </div>
+
+              {frequency === "twice_a_day" && (
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-wrap gap-4">
+                    <FormField
+                      control={form.control}
+                      name="wateringTimes.0"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Primeiro Horário</FormLabel>
+                          <FormControl>
+                            <TimePicker
+                              value={field.value}
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="wateringTimes.1"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Segundo Horário</FormLabel>
+                          <FormControl>
+                            <TimePicker
+                              value={field.value}
+                              onChange={field.onChange}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {form.formState.errors.wateringTimes?.root?.message && (
+                    <p className="text-red-500 text-sm mt-1 block">
+                      {form.formState.errors.wateringTimes.root.message}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Umidade */}
+              <FormField
+                control={form.control}
+                name="idealSoilMoisture"
+                render={({ field }) => (
+                  <FormItem className="md:col-span-2">
+                    <FormLabel>Nível Mínimo de Umidade</FormLabel>
+                    <FormControl>
+                      <div className="flex items-center gap-4">
+                        <Slider
+                          value={[field.value ?? 0]}
+                          onValueChange={(val) => field.onChange(val[0])}
+                          max={100}
+                          step={1}
+                        />
+                        <span className="w-12 text-center font-medium">
+                          {field.value}%
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormDescription>
+                      A irrigação automática será acionada quando a umidade
+                      estiver abaixo deste valor.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
         </div>
 
         {/* DISPOSITIVO */}
