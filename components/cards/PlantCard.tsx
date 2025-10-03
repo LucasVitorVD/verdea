@@ -2,14 +2,16 @@
 
 import {
   Droplet,
-  Thermometer,
   Pen,
-  Activity,
-  Calendar,
   Edit,
   Info,
   Settings,
   Trash2,
+  Leaf,
+  Sprout,
+  MapPin,
+  CalendarClock,
+  Clock,
 } from "lucide-react";
 import {
   Card,
@@ -46,13 +48,15 @@ import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
 import PlantForm from "../forms/PlantForm";
 import { useState } from "react";
+import { Badge } from "../ui/badge";
+import { translateWateringFrequency } from "@/lib/utils";
 
 interface Props {
   plant: Plant;
 }
 
 export default function PlantCard({ plant }: Props) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const deletePlantMutation = useMutation({
@@ -95,21 +99,11 @@ export default function PlantCard({ plant }: Props) {
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center space-x-1">
               <Droplet className="size-4 text-blue-500" />
-              <p>Umidade</p>
+              <p className="text-sm">Umidade (Gatilho)</p>
             </div>
             <div className="flex items-center gap-4">
-              <Progress value={33} />
-              <p>%33</p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-1">
-              <Thermometer className="size-4 text-orange-500" />
-              <p>Última irrigação</p>
-            </div>
-            <div>
-              <p>Hoje, 08:00</p>
+              <Progress value={plant.idealSoilMoisture} />
+              <p>%{plant.idealSoilMoisture}</p>
             </div>
           </div>
         </div>
@@ -150,30 +144,21 @@ export default function PlantCard({ plant }: Props) {
             <div className="mt-4 space-y-6">
               <div className="px-4">
                 <h3 className="text-lg font-semibold mb-3">
-                  Condições Ambientais
+                  Informações da Planta
                 </h3>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Droplet className="h-5 w-5 text-blue-500" />
-                      <span>Umidade do Solo</span>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 text-sm">
+                      <Leaf className="h-4 w-4 text-muted-foreground" />
+                      <span>Nome: {plant.name}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
-                        <div
-                          className={`h-full ${
-                            plant.idealSoilMoisture > 60
-                              ? "bg-plant"
-                              : plant.idealSoilMoisture > 30
-                              ? "bg-amber-500"
-                              : "bg-red-500"
-                          }`}
-                          style={{ width: `${plant.idealSoilMoisture}%` }}
-                        />
-                      </div>
-                      <span className="font-medium">
-                        {plant.idealSoilMoisture}%
-                      </span>
+                    <div className="flex items-center gap-3 text-sm">
+                      <Sprout className="h-4 w-4 text-muted-foreground" />
+                      <span>Tipo/Espécie: {plant.species}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-sm">
+                      <MapPin className="h-4 w-4 text-muted-foreground" />
+                      <span>Localização: {plant.location}</span>
                     </div>
                   </div>
                 </div>
@@ -181,23 +166,51 @@ export default function PlantCard({ plant }: Props) {
 
               <Separator />
 
-              {/* Histórico */}
-              <div className="px-4">
+              <div className="space-y-2 px-4">
                 <h3 className="text-lg font-semibold mb-3">
-                  Histórico Recente
+                  Configurações de Irrigação
                 </h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 text-sm">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span>Última irrigação: Hoje, 08:00</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <Activity className="h-4 w-4 text-muted-foreground" />
-                    <span>Próxima irrigação: Amanhã, 08:00</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-sm">
-                    <Settings className="h-4 w-4 text-muted-foreground" />
-                    <span>Última configuração: Há 3 dias</span>
+                <div className="flex items-center gap-3 text-sm">
+                  <Settings className="h-4 w-4 text-muted-foreground" />
+                  <span>
+                    Modo:{" "}
+                    <Badge variant="outline">
+                      {plant.mode === "AUTO" ? "Automático" : "Programado"}
+                    </Badge>
+                  </span>
+                </div>
+
+                {plant.mode === "SCHEDULED" && (
+                  <>
+                    <div className="flex items-center gap-3 text-sm">
+                      <CalendarClock className="h-4 w-4 text-muted-foreground" />
+                      <span>Frequência: {translateWateringFrequency(plant.wateringFrequency)}</span>
+                    </div>
+
+                    <div className="flex items-center gap-3 text-sm">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span>Horários: {plant.wateringTimes.join(", ")}</span>
+                    </div>
+                  </>
+                )}
+
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Droplet className="h-4 w-4" />
+                      <span className="text-sm">Umidade (Gatilho)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-primary"
+                          style={{ width: `${plant.idealSoilMoisture}%` }}
+                        />
+                      </div>
+                      <span className="font-medium">
+                        {plant.idealSoilMoisture}%
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -226,7 +239,10 @@ export default function PlantCard({ plant }: Props) {
                           <CardTitle>Informações da Planta</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                          <PlantForm data={plant} onSuccess={() => setOpen(false)} />
+                          <PlantForm
+                            data={plant}
+                            onSuccess={() => setOpen(false)}
+                          />
                         </CardContent>
                       </Card>
                     </div>

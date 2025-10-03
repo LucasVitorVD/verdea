@@ -29,35 +29,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 Cuide das suas plantas de forma inteligente
               </h2>
               <p className="text-xl mb-8 text-center max-w-lg">
-                Junte-se a milhares de pessoas que já estão usando o Verdea para
+                Junte-se a outras pessoas que já estão usando o Verdea para
                 monitorar e cuidar melhor de suas plantas.
               </p>
-              <div className="space-y-6 max-w-md">
-                <div className="flex items-center gap-3">
-                  <div className="h-6 w-6 rounded-full bg-white/20 flex items-center justify-center shrink-0 mt-1">
-                    <ArrowRight className="size-3.5 text-white" />
-                  </div>
-                  <p className="text-white/90">
-                    Monitore a umidade e temperatura em tempo real
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="h-6 w-6 rounded-full bg-white/20 flex items-center justify-center shrink-0 mt-1">
-                    <ArrowRight className="size-3.5 text-white" />
-                  </div>
-                  <p className="text-white/90">
-                    Receba dicas personalizadas para cada tipo de planta
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="h-6 w-6 rounded-full bg-white/20 flex items-center justify-center shrink-0 mt-1">
-                    <ArrowRight className="size-3.5 text-white" />
-                  </div>
-                  <p className="text-white/90">
-                    Economize água com irrigação inteligente e automática
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </div>

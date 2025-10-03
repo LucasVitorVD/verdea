@@ -21,9 +21,7 @@ export default function Termos() {
         <p className="text-justify md:text-left text-balance hyphens-auto">
           O Verdea é um sistema de irrigação automática inteligente que
           permite aos usuários monitorar e cuidar de suas plantas através de uma
-          plataforma web e dispositivos IoT. Nosso serviço inclui monitoramento
-          de umidade, temperatura, irrigação automática e dicas personalizadas
-          para o cuidado de plantas.
+          plataforma web e dispositivos IoT. Nosso serviço inclui irrigação automática para o cuidado de plantas.
         </p>
       </div>
 
