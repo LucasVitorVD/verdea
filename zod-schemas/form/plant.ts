@@ -62,20 +62,42 @@ export const plantFormSchema = z.object({
       }
 
       if (data.wateringFrequency === "twice_a_day" && data.wateringTimes) {
-        const first = timeStringToMinutes(data.wateringTimes[0]);
-        const second = timeStringToMinutes(data.wateringTimes[1]);
+        const [first, second] = data.wateringTimes;
 
-        if (first === second) {
+        if (!first || !second) {
+          ctx.addIssue({
+            path: ["wateringTimes"],
+            code: z.ZodIssueCode.custom,
+            message: "Informe os dois horários de irrigação",
+          });
+          return;
+        }
+
+        const firstMinutes = timeStringToMinutes(first);
+        const secondMinutes = timeStringToMinutes(second);
+
+        if (firstMinutes === secondMinutes) {
           ctx.addIssue({
             path: ["wateringTimes"],
             code: z.ZodIssueCode.custom,
             message: "Os horários de irrigação não podem ser iguais",
           });
-        } else if (second < first) {
+        } 
+        
+        if (second < first) {
           ctx.addIssue({
             path: ["wateringTimes"],
             code: z.ZodIssueCode.custom,
             message: "O segundo horário deve ser após o primeiro",
+          });
+        }
+        
+        if (secondMinutes - firstMinutes < 30) {
+          ctx.addIssue({
+            path: ["wateringTimes"],
+            code: z.ZodIssueCode.custom,
+            message:
+              "Recomendamos que os horários tenham pelo menos 30 minutos de diferença",
           });
         }
       }
