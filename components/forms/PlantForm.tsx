@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Clock, ImagePlus, Zap } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Form,
   FormControl,

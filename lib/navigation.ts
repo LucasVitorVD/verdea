@@ -43,7 +43,7 @@ export const dashboardNavigationItems = {
     },
     {
       name: "Histórico de irrigação",
-      url: "/irrigation-history",
+      url: "/dashboard/irrigation-history",
       icon: Droplets,
     },
   ],

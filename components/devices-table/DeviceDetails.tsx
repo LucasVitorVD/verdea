@@ -125,26 +125,6 @@ export default function DeviceDetails({ device }: Props) {
             )}
           </CardContent>
         </Card>
-
-        {/* Logs Recentes */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Logs Recentes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-start gap-3 p-2 text-sm">
-                <span className="text-xs text-muted-foreground font-mono w-12">
-                  10:50
-                </span>
-                <div className="w-2 h-2 rounded-full mt-1.5 bg-primary" />
-                <span className="flex-1">
-                  Irrigação automática executada - Planta 1
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       <div className="flex flex-col gap-2">
