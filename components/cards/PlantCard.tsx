@@ -49,7 +49,7 @@ import { toast } from "sonner";
 import PlantForm from "../forms/PlantForm";
 import { useState } from "react";
 import { Badge } from "../ui/badge";
-import { translateWateringFrequency } from "@/lib/utils";
+import { translateSpecies, translateWateringFrequency } from "@/lib/utils";
 
 interface Props {
   plant: Plant;
@@ -135,7 +135,7 @@ export default function PlantCard({ plant }: Props) {
               </figure>
               <div>
                 <p>{plant.name}</p>
-                <p className="text-muted-foreground">{plant.species}</p>
+                <p className="text-muted-foreground">{translateSpecies(plant.species)}</p>
               </div>
             </div>
 
@@ -154,7 +154,7 @@ export default function PlantCard({ plant }: Props) {
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <Sprout className="h-4 w-4 text-muted-foreground" />
-                      <span>Tipo/Espécie: {plant.species}</span>
+                      <span>Tipo/Espécie: {translateSpecies(plant.species)}</span>
                     </div>
                     <div className="flex items-center gap-3 text-sm">
                       <MapPin className="h-4 w-4 text-muted-foreground" />

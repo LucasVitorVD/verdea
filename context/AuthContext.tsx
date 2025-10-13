@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           process.env.NEXT_PUBLIC_API_URL + "/user/me"
         );
 
-        return request.data;
+        return request.data as User;
       } catch (error) {
         throw error;
       }
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   const signUpMutation = useMutation({
-    mutationFn: async (newUser: { email: string; password: string }) => {
+    mutationFn: async (newUser: { email: string; password: string; }) => {
       return axiosInstance.post(
         process.env.NEXT_PUBLIC_API_URL + "/auth/register",
         newUser

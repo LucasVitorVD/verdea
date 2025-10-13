@@ -18,4 +18,11 @@ interface Plant {
   deviceSummary: Pick<Device, 'id' | 'name' | 'macAddress' | 'createdAt'>
 }
 
-export type { Plant }
+interface PlantSummary {
+  id: number;
+  name: string;
+  species: string;
+  imgUrl: string | null;
+}
+
+export type { Plant, PlantSummary }

@@ -71,20 +71,6 @@ export default function PrivacyCard() {
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-4">
-          <div className="flex items-start gap-3 p-4 border rounded-lg">
-            <Shield className="h-5 w-5 text-primary mt-0.5" />
-            <div className="flex-1">
-              <h3 className="font-medium">Seus dados estão seguros</h3>
-              <p className="text-sm text-muted-foreground mt-1">
-                Utilizamos criptografia de ponta para proteger suas informações
-                pessoais e dados das plantas. Seus dados são armazenados de
-                forma segura e nunca são compartilhados com terceiros.
-              </p>
-            </div>
-          </div>
-
-          <Separator />
-
           <div className="space-y-4">
             <h3 className="text-lg font-medium">Informações Coletadas</h3>
             <div className="space-y-3">

@@ -1,5 +1,4 @@
 import ActivityCard from "@/components/cards/ActivityCard";
-import NotificationsCard from "@/components/cards/NotificationsCard";
 import PrivacyCard from "@/components/cards/PrivacyCard";
 import ProfileCard from "@/components/cards/ProfileCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,7 +17,6 @@ export default function ProfilePage() {
         <TabsList>
           <TabsTrigger value="profile">Perfil</TabsTrigger>
           <TabsTrigger value="activity">Atividade</TabsTrigger>
-          <TabsTrigger value="notifications">Notificações</TabsTrigger>
           <TabsTrigger value="privacy">Privacidade</TabsTrigger>
         </TabsList>
         <TabsContent value="profile">
@@ -26,9 +24,6 @@ export default function ProfilePage() {
         </TabsContent>
         <TabsContent value="activity">
           <ActivityCard />
-        </TabsContent>
-        <TabsContent value="notifications">
-          <NotificationsCard />
         </TabsContent>
         <TabsContent value="privacy">
           <PrivacyCard />

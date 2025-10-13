@@ -10,80 +10,136 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Card, CardContent } from "@/components/ui/card";
-import { Clock, Droplets } from "lucide-react";
+import { Clock, Droplets, RefreshCcw, Trash2 } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { useState } from "react";
+import { IrrigationPage } from "@/interfaces/irrigationRecord";
+import { formatDate } from "@/lib/utils";
+import { formatDuration } from "@/lib/utils";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import axiosInstance from "@/lib/axios";
+import { toast } from "sonner";
+import EmptyState from "../empty-state";
+import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
+import { Button } from "../ui/button";
 
-interface IrrigationRecord {
-  id: number;
-  soil_moisture: number;
-  mode: "AUTO" | "PROGRAMADO";
-  duration_seconds: number;
-  timestamp: string;
-  plant_id: number;
-  plant_name: string;
-  device_id: number;
-  device_name: string;
-}
-
-interface IrrigationHistoryListProps {
-  history: IrrigationRecord[];
-}
-
-export default function IrrigationHistoryList({
-  history,
-}: IrrigationHistoryListProps) {
+export default function IrrigationHistoryList() {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
+  const queryClient = useQueryClient();
 
-  const totalItems = history.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = history.slice(startIndex, endIndex);
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["getUserIrrigationHistory", currentPage],
+    queryFn: async ({ queryKey }) => {
+      const [, page] = queryKey as [string, number];
+
+      try {
+        const response = await axiosInstance.get(
+          process.env.NEXT_PUBLIC_API_URL +
+            `/irrigation-history/all?page=${page - 1}&size=8`
+        );
+
+        return response.data as IrrigationPage;
+      } catch (error) {
+        toast.error(
+          "Erro ao carregar o histórico de irrigação. Tente novamente mais tarde."
+        );
+      }
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  const deleteHistoryMutation = useMutation({
+    mutationFn: async (historyId: number) => {
+      return axiosInstance.delete(
+        process.env.NEXT_PUBLIC_API_URL +
+          `/irrigation-history/delete/${historyId}`
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["getUserIrrigationHistory"] });
+      toast.success("Registro de irrigação excluído!");
+    },
+    onError: () => {
+      toast.error("Não foi possível excluir o registro de irrigação!");
+    },
+    retry: 2,
+  });
 
   const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+    if (!data?.first) {
+      const prev = currentPage - 1;
+      setCurrentPage(prev);
+    }
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+    if (!data?.last) {
+      const next = currentPage + 1;
+      setCurrentPage(next);
+    }
   };
 
-  const formatDuration = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes}m ${secs}s`;
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-12 text-muted-foreground">
+        Carregando histórico...
+      </div>
+    );
+  }
+
+  if (data && data.content.length <= 0) {
+    return (
+      <div className="flex flex-col items-center justify-center flex-1 gap-6">
+        <EmptyState
+          title="Nenhum registro de irrigação encontrado… por enquanto!"
+          description="Quando você começar a irrigar suas plantas, os registros aparecerão aqui."
+          imgSrc={EmptyIllustration}
+          imgAlt="Ilustração de histórico não encontrado"
+        />
+        <Button
+          variant="outline"
+          onClick={() => refetch()}
+          disabled={isLoading}
+          className="hover:cursor-pointer"
+        >
+          Atualizar <RefreshCcw />
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1">
+      <div className="flex justify-end mb-4">
+        <Button
+          variant="outline"
+          onClick={() => refetch()}
+          disabled={isLoading}
+          className="hover:cursor-pointer"
+        >
+          Atualizar <RefreshCcw />
+        </Button>
+      </div>
       <div className="flex-1">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {history.length > 0 ? (
-            history.map((item) => (
+          {data &&
+            data.content.length > 0 &&
+            data.content.map((history) => (
               <Card
-                key={item.id}
+                key={history.id}
                 className="border-l-4 border-l-primary hover:shadow-md transition-shadow"
               >
                 <CardContent>
                   <div className="mb-2">
                     <h3 className="font-semibold text-sm truncate">
-                      {item.plant_name}
+                      {history.plant.name}
                     </h3>
                     <p className="text-xs text-muted-foreground truncate">
-                      Dispositivo: {item.device_name}
+                      Dispositivo: {history.deviceName}
                     </p>
                   </div>
 
@@ -91,80 +147,71 @@ export default function IrrigationHistoryList({
                     <div className="flex items-center gap-1.5">
                       <Clock className="h-3 w-3 text-muted-foreground flex-shrink-0" />
                       <span className="truncate">
-                        {formatDate(item.timestamp)}
+                        {formatDate(history.createdAt)}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-1.5">
                       <Droplets className="h-3 w-3 text-muted-foreground flex-shrink-0" />
-                      <span>{item.soil_moisture.toFixed(1)}%</span>
+                      <span>{history.soilMoisture.toFixed(1)}%</span>
                       <span className="text-muted-foreground">•</span>
-                      <span>{formatDuration(item.duration_seconds)}</span>
+                      <span>{formatDuration(history.durationSeconds)}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 mt-2.5 pt-2.5 border-t">
+                  <div className="flex items-center justify-between gap-1.5 mt-2.5 pt-2.5 border-t">
                     <Badge
-                      variant={item.mode === "AUTO" ? "default" : "secondary"}
+                      variant={
+                        history.mode === "AUTO" ? "default" : "secondary"
+                      }
                       className={`${
-                        item.mode === "PROGRAMADO" && "bg-blue-500 text-white"
+                        history.mode === "PROGRAMADO" &&
+                        "bg-blue-500 text-white"
                       } text-xs py-0`}
                     >
-                      {item.mode}
+                      {history.mode}
                     </Badge>
+                    <Trash2
+                      className="size-5 text-muted-foreground hover:text-destructive hover:cursor-pointer"
+                      onClick={() => deleteHistoryMutation.mutate(history.id)}
+                    />
                   </div>
                 </CardContent>
               </Card>
-            ))
-          ) : (
-            <Card>
-              <CardContent className="py-12 text-center">
-                <Droplets className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">
-                  Nenhum registro encontrado com os filtros aplicados
-                </p>
-              </CardContent>
-            </Card>
-          )}
+            ))}
         </div>
       </div>
 
-      {totalPages > 1 && (
-        <Pagination>
+      {data && data.totalPages >= 1 && (
+        <Pagination className="mt-5">
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious
                 href="#"
                 onClick={handlePrevious}
-                className={
-                  currentPage === 1 ? "opacity-50 pointer-events-none" : ""
-                }
+                className={data.first ? "opacity-50 pointer-events-none" : ""}
               />
             </PaginationItem>
 
-            {Array.from({ length: totalPages }).map((_, index) => (
+            {Array.from({ length: data.totalPages }).map((_, index) => (
               <PaginationItem key={index}>
                 <PaginationLink
                   href="#"
                   isActive={currentPage === index + 1}
-                  onClick={() => setCurrentPage(index + 1)}
+                  onClick={() => handlePageClick(index + 1)}
                 >
                   {index + 1}
                 </PaginationLink>
               </PaginationItem>
             ))}
 
-            {totalPages > 5 && <PaginationEllipsis />}
+            {data.totalPages > 5 && <PaginationEllipsis />}
 
             <PaginationItem>
               <PaginationNext
                 href="#"
                 onClick={handleNext}
-                className={
-                  currentPage === totalPages
-                    ? "opacity-50 pointer-events-none"
-                    : ""
-                }
+                className={data.last ? "opacity-50 pointer-events-none" : ""}
               />
             </PaginationItem>
           </PaginationContent>

@@ -32,14 +32,14 @@ export const dashboardNavigationItems = {
       icon: Home,
     },
     {
-      name: "Minhas Plantas",
-      url: "/dashboard/my-plants",
-      icon: Leaf,
-    },
-    {
       name: "Meus dispositivos",
       url: "/dashboard/devices",
       icon: RadioReceiver,
+    },
+    {
+      name: "Minhas Plantas",
+      url: "/dashboard/my-plants",
+      icon: Leaf,
     },
     {
       name: "Histórico de irrigação",

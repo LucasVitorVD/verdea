@@ -34,7 +34,7 @@ export default function SignUpForm() {
   function onSubmit(values: SignUpFormSchemaType) {
     const newUser = {
       email: values.email,
-      password: values.password,
+      password: values.password
     };
 
     const retryMutation = () => {
