@@ -25,7 +25,7 @@ import { plantFormSchema, PlantFormSchema } from "@/zod-schemas/form/plant";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios";
-import { Device } from "@/interfaces/device";
+import { Device, DeviceAvailable } from "@/interfaces/device";
 import Link from "next/link";
 import { Slider } from "../ui/slider";
 import EmptyState from "../empty-state";
@@ -40,9 +40,14 @@ import { Label } from "@/components/ui/label";
 interface PlantFormProps {
   data?: Plant;
   onSuccess?: () => void;
+  isAdmin?: boolean;
 }
 
-export default function PlantForm({ data, onSuccess }: PlantFormProps) {
+export default function PlantForm({
+  data,
+  onSuccess,
+  isAdmin,
+}: PlantFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(
     data?.imageUrl ?? null
   );
@@ -75,19 +80,23 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
   const mode = form.watch("mode");
   const frequency = form.watch("wateringFrequency");
 
+  async function fetchDevices<T extends boolean>(isAdmin: T) {
+    try {
+      const urlRequest =
+        process.env.NEXT_PUBLIC_API_URL +
+        `${!isAdmin ? "/device/my-devices" : "/admin/devices/with-user"}`;
+
+      const response = await axiosInstance.get(urlRequest);
+
+      return response.data as T extends true ? DeviceAvailable[] : Device[];
+    } catch (error) {
+      toast.error("Erro ao carregar dispositivos.");
+    }
+  }
+
   const devicesQuery = useQuery({
     queryKey: ["getUserDevices"],
-    queryFn: async () => {
-      try {
-        const request = await axiosInstance.get(
-          process.env.NEXT_PUBLIC_API_URL + "/device/my-devices"
-        );
-
-        return request.data as Device[];
-      } catch (error) {
-        toast.error("Erro ao carregar dispositivos.");
-      }
-    },
+    queryFn: () => fetchDevices(isAdmin ?? false),
     refetchOnWindowFocus: false,
   });
 
@@ -161,9 +170,11 @@ export default function PlantForm({ data, onSuccess }: PlantFormProps) {
       deviceMacAddress: string;
     };
 
-    mutation.mutate(newPlant);
-
-    console.log(newPlant);
+    if (isAdmin) {
+      console.log(newPlant)
+    } else {
+      mutation.mutate(newPlant);
+    }
 
     if (onSuccess) onSuccess();
   };

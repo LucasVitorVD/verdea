@@ -9,11 +9,9 @@ import {
 } from "@/components/ui/table";
 import { flexRender } from "@tanstack/react-table";
 import Spinner from "../spinner/Spinner";
-import type { Device } from "@/interfaces/device";
-import EmptyState from "../empty-state";
 
 interface DataTableProps<TData, TValue> {
-  table: TansTackTable<Device>;
+  table: TansTackTable<TData>;
   columns: ColumnDef<TData, TValue>[];
   isLoading: boolean;
 }

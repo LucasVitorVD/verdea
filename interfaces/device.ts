@@ -1,4 +1,5 @@
 import { Plant } from "./plant"
+import { User } from "./user"
 
 interface Device {
   id: number,
@@ -10,4 +11,12 @@ interface Device {
   plantSummary: Pick<Plant, 'id' | 'name' | 'species' | 'imageUrl' | 'mode'>
 }
 
-export type { Device }
+interface DeviceAvailable {
+  id: number,
+  name: string,
+  macAddress: string,
+  currentIp: string,
+  user: User
+}
+
+export type { Device, DeviceAvailable }

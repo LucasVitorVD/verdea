@@ -12,6 +12,7 @@ import { LucideProps } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Badge } from "./ui/badge";
 import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
 
 interface NavSectionsProps {
   items: {
@@ -41,10 +42,10 @@ export function NavSections({ items }: NavSectionsProps) {
             }
           >
             <SidebarMenuButton asChild>
-              <a href={item.url}>
+              <Link href={item.url}>
                 <item.icon />
                 <span>{item.name}</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
@@ -57,11 +58,11 @@ export function NavSections({ items }: NavSectionsProps) {
             }
           >
             <SidebarMenuButton asChild>
-              <a href={"/dashboard/admin"}>
+              <Link href={"/dashboard/admin"}>
                 <IconUserStar />
                 <span>Gerenciamento</span>
                 <Badge>Admin</Badge>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         )}
