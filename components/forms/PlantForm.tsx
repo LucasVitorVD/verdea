@@ -23,19 +23,17 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { plantFormSchema, PlantFormSchema } from "@/zod-schemas/form/plant";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axiosInstance from "@/lib/axios";
-import { Device, DeviceAvailable } from "@/interfaces/device";
 import Link from "next/link";
 import { Slider } from "../ui/slider";
 import EmptyState from "../empty-state";
 import EmptyStateIllustration from "@/public/images/illustrations/undraw_gardening.svg";
-import { toast } from "sonner";
-import { useQueryClient } from "@tanstack/react-query";
 import { Plant } from "@/interfaces/plant";
 import TimePicker from "./TimePicker";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { usePlants } from "@/hooks/usePlants";
+import { useDevices } from "@/hooks/useDevice";
+import { handleUploadImage } from "@/lib/uploadImage";
 
 interface PlantFormProps {
   data?: Plant;
@@ -51,7 +49,8 @@ export default function PlantForm({
   const [imagePreview, setImagePreview] = useState<string | null>(
     data?.imageUrl ?? null
   );
-  const queryClient = useQueryClient();
+  const { createPlant, updatePlant } = usePlants(!!isAdmin);
+  const { devicesQuery } = useDevices(!!isAdmin);
 
   const form = useForm<PlantFormSchema>({
     resolver: zodResolver(plantFormSchema),
@@ -80,123 +79,48 @@ export default function PlantForm({
   const mode = form.watch("mode");
   const frequency = form.watch("wateringFrequency");
 
-  async function fetchDevices<T extends boolean>(isAdmin: T) {
-    try {
-      const urlRequest =
-        process.env.NEXT_PUBLIC_API_URL +
-        `${!isAdmin ? "/device/my-devices" : "/admin/devices/with-user"}`;
-
-      const response = await axiosInstance.get(urlRequest);
-
-      return response.data as T extends true ? DeviceAvailable[] : Device[];
-    } catch (error) {
-      toast.error("Erro ao carregar dispositivos.");
-    }
-  }
-
-  const devicesQuery = useQuery({
-    queryKey: ["getUserDevices"],
-    queryFn: () => fetchDevices(isAdmin ?? false),
-    refetchOnWindowFocus: false,
-  });
-
-  const mutation = useMutation({
-    mutationFn: async (plantData: Omit<Plant, "device">) => {
-      if (data) {
-        return axiosInstance.patch(
-          process.env.NEXT_PUBLIC_API_URL + `/plant/update/${data.id}`,
-          plantData
-        );
-      } else {
-        return axiosInstance.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/plant/add`,
-          plantData
-        );
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getUserPlants"] });
-      toast.success(`Planta ${data ? "editada" : "adicionada"} com sucesso!`);
-    },
-    onError: (error: any) => {
-      const errorMessage =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Erro desconhecido. Por favor, tente novamente.";
-
-      toast.error(`Erro ao ${data ? "editar" : "adicionar"} planta.`, {
-        description: errorMessage,
-        richColors: true,
-        style: {
-          background: "hsl(0 50% 45%)",
-          color: "white",
-          border: "1px solid hsl(0 50% 45%)",
-        },
-      });
-    },
-  });
-
-  const onSubmit = async (data: PlantFormSchema) => {
-    const image = data.image
-      ? await handleUploadImage(data.image)
+  const onSubmit = async (formData: PlantFormSchema) => {
+    const image = formData.image
+      ? await handleUploadImage(formData.image)
       : imagePreview;
 
-    if (data.wateringFrequency === "once_a_day") {
-      data.wateringTimes = [data.wateringTimes![0]];
-    } else if (data.wateringFrequency !== "twice_a_day") {
-      data.wateringTimes = [];
+    if (formData.wateringFrequency === "once_a_day") {
+      formData.wateringTimes = [formData.wateringTimes![0]];
+    } else if (formData.wateringFrequency !== "twice_a_day") {
+      formData.wateringTimes = [];
     }
 
-    const mode = data.mode;
+    const mode = formData.mode;
 
     if (mode === "AUTO") {
-      data.wateringFrequency = undefined;
-      data.wateringTimes = [];
-      data.idealSoilMoisture = undefined;
+      formData.wateringFrequency = undefined;
+      formData.wateringTimes = [];
+      formData.idealSoilMoisture = undefined;
     }
 
-    const newPlant = {
+    const payload = {
       imageUrl: image,
-      name: data.name,
-      species: data.species,
-      location: data.location,
-      notes: data.notes ?? "",
-      mode: data.mode,
-      wateringTimes: data.wateringTimes ?? [],
-      wateringFrequency: data.wateringFrequency ?? null,
-      idealSoilMoisture: data.idealSoilMoisture ?? 30,
-      deviceMacAddress: data.device,
-    } as Omit<Plant, "id" | "device"> & {
+      name: formData.name,
+      species: formData.species,
+      location: formData.location,
+      notes: formData.notes ?? "",
+      mode: formData.mode,
+      wateringTimes: formData.wateringTimes ?? [],
+      wateringFrequency: formData.wateringFrequency ?? null,
+      idealSoilMoisture: formData.idealSoilMoisture ?? 30,
+      deviceMacAddress: formData.device,
+    } as Omit<Plant, "device"> & {
       deviceMacAddress: string;
     };
 
-    if (isAdmin) {
-      console.log(newPlant)
+    if (!data) {
+      createPlant.mutate(payload);
     } else {
-      mutation.mutate(newPlant);
+      updatePlant.mutate({ ...payload, id: data.id });
     }
 
-    if (onSuccess) onSuccess();
+    onSuccess?.();
   };
-
-  async function handleUploadImage(imageFile: File) {
-    try {
-      const formData = new FormData();
-      formData.append("imageFile", imageFile);
-
-      const request = await fetch("/api/files", {
-        method: "POST",
-        body: formData,
-      });
-
-      const signedUrl = await request.json();
-
-      return signedUrl.url;
-    } catch (error) {
-      toast.error("Erro ao enviar imagem.");
-      console.error("Error uploading image:", error);
-    }
-  }
 
   return (
     <Form {...form}>

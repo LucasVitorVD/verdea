@@ -16,35 +16,18 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
-import EmptyState from "../empty-state";
+import EmptyState from "@/components/empty-state";
 import GardeningIllustration from "@/public/images/illustrations/undraw_gardening.svg";
 import Link from "next/link";
+import { useDevices } from "@/hooks/useDevice";
 
 interface Props {
   device: Device;
 }
 
 export default function DeviceDetails({ device }: Props) {
-  const queryClient = useQueryClient();
-
-  const deleteDeviceMutation = useMutation({
-    mutationFn: async (id: number) => {
-      return axiosInstance.delete(
-        process.env.NEXT_PUBLIC_API_URL + `/device/delete/${id}`
-      );
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getUserDevices"] });
-      toast.success("Dispositivo removido!");
-    },
-    onError: () => {
-      toast.error("Não foi possível remover o dispositivo!");
-    },
-    retry: 2,
-  });
+  const { deleteDevice } = useDevices(false)
 
   const handleResetWifi = async (device: Device) => {
     if (!device.currentIp) {
@@ -180,7 +163,7 @@ export default function DeviceDetails({ device }: Props) {
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-destructive cursor-pointer hover:bg-destructive/90"
-                onClick={() => deleteDeviceMutation.mutate(device.id)}
+                onClick={() => deleteDevice.mutate(device.id)}
               >
                 Remover
               </AlertDialogAction>

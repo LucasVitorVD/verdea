@@ -30,7 +30,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { BadgeCheckIcon, BadgeXIcon, Ellipsis, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useDevices } from "@/hooks/admin/useDevice";
+import { useDevices } from "@/hooks/useDevice";
 import { useUsers } from "@/hooks/admin/useUsers";
 import { useState } from "react";
 
@@ -76,7 +76,7 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
     id: "actions",
     cell: ({ row }) => {
       const [selectedUser, setSelectedUser] = useState<string | null>(null);
-      const { deleteDevice, assignDevice } = useDevices();
+      const { deleteDevice, assignDevice } = useDevices(true);
       const { usersQuery } = useUsers();
       const device = row.original;
 

@@ -102,7 +102,7 @@ export default function AddDeviceDialog() {
       return response;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getUserDevices"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "user", "devices"] });
 
       setOpenDialog(false);
 

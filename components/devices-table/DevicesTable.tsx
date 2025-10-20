@@ -17,31 +17,18 @@ import axiosInstance from "@/lib/axios";
 import { Search } from "lucide-react";
 import EmptyState from "../empty-state";
 import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
+import { useDevices } from "@/hooks/useDevice";
 
 export default function DevicesTable() {
   const [page, setPage] = useState(1);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: "status", value: "signed" },
   ]);
-
-  const { data: devices, isLoading } = useQuery({
-    queryKey: ["getUserDevices"],
-    queryFn: async () => {
-      try {
-        const request = await axiosInstance.get(
-          process.env.NEXT_PUBLIC_API_URL + "/device/my-devices"
-        );
-
-        return request.data as Device[];
-      } catch (error) {
-        throw error;
-      }
-    },
-    refetchOnWindowFocus: false,
-  });
+  const { devicesQuery } = useDevices(false)
+  const devicesData = devicesQuery.data as Device[]
 
   const table = useReactTable({
-    data: devices ?? [],
+    data: devicesData ?? [],
     columns: deviceTableColumns,
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -53,7 +40,7 @@ export default function DevicesTable() {
     },
   });
 
-  if (devices?.length === 0) {
+  if (devicesData?.length === 0) {
     return (
       <EmptyState
         title="Nenhum dispositivo encontrado… por enquanto!"
@@ -94,7 +81,7 @@ export default function DevicesTable() {
           />
 
           <div className="text-muted-foreground flex-1 text-sm mt-2">
-            <p>Total: {devices?.length}</p>
+            <p>Total: {devicesData?.length}</p>
           </div>
           {/* <DataTable.Pagination>
             <DataTable.PaginationAction

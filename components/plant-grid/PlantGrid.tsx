@@ -4,32 +4,12 @@ import React from "react";
 import PlantCard from "../cards/PlantCard";
 import EmptyState from "../empty-state";
 import GardeningIllustration from "@/public/images/illustrations/undraw_gardening.svg";
-import { Plant } from "@/interfaces/plant";
-import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "@/lib/axios";
-import { toast } from "sonner";
+import { usePlants } from "@/hooks/usePlants";
 
 export default function PlantGrid() {
-  const { data: plants = [], isLoading } = useQuery<Plant[]>({
-    queryKey: ["getUserPlants"],
-    queryFn: async () => {
-      try {
-        const request = await axiosInstance.get(
-          process.env.NEXT_PUBLIC_API_URL + "/plant/all"
-        );
+  const { plantsQuery } = usePlants(false)
 
-        return request.data as Plant[];
-      } catch (error) {
-        toast.error(
-          "Erro ao carregar suas plantas. Tente novamente mais tarde."
-        );
-        return [];
-      }
-    },
-    refetchOnWindowFocus: false,
-  });
-
-  if (isLoading) {
+  if (plantsQuery.isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <p>Carregando suas plantas...</p>
@@ -37,7 +17,7 @@ export default function PlantGrid() {
     );
   }
 
-  if (plants.length === 0) {
+  if (plantsQuery.data?.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <EmptyState
@@ -52,7 +32,7 @@ export default function PlantGrid() {
 
   return (
     <div className="flex flex-col items-center gap-6 lg:flex-row">
-      {plants.map((plant) => (
+      {plantsQuery.data && plantsQuery.data.map((plant) => (
         <PlantCard key={plant.id} plant={plant} />
       ))}
     </div>

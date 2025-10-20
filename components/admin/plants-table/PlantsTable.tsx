@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table/index";
-import { BadgePlus, Plus, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
 import {
@@ -30,13 +30,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { usePlants } from "@/hooks/admin/usePlants";
+import { usePlants } from "@/hooks/usePlants";
 import { plantTableColumns } from "./plantTableColumns";
 import PlantForm from "@/components/forms/PlantForm";
 import { Button } from "@/components/ui/button"
 
 export default function PlantsTable() {
-  const { plantsQuery } = usePlants();
+  const { plantsQuery } = usePlants(true);
   const [page, setPage] = useState(1);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: "name", value: "" },

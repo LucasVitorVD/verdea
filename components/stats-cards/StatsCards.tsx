@@ -3,13 +3,13 @@
 import { Leaf, Router, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { useUsers } from "@/hooks/admin/useUsers";
-import { useDevices } from "@/hooks/admin/useDevice";
-import { usePlants } from "@/hooks/admin/usePlants";
+import { useDevices } from "@/hooks/useDevice";
+import { usePlants } from "@/hooks/usePlants";
 
 export default function StatsCards() {
   const { usersQuery } = useUsers()
-  const { devicesQuery } = useDevices()
-  const { plantsQuery } = usePlants()
+  const { devicesQuery } = useDevices(true)
+  const { plantsQuery } = usePlants(true)
 
   return (
     <div className="grid gap-4 md:grid-cols-3">

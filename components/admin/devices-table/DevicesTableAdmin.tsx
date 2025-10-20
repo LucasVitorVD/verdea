@@ -14,17 +14,19 @@ import { DataTable } from "@/components/data-table/index";
 import { Search } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
-import { useDevices } from "@/hooks/admin/useDevice";
+import { useDevices } from "@/hooks/useDevice";
+import { Device } from "@/interfaces/device";
 
 export default function DevicesTableAdmin() {
   const [page, setPage] = useState(1);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: "status", value: "signed" },
   ]);
-  const { devicesQuery } = useDevices();
+  const { devicesQuery } = useDevices(true);
+  const devicesData = devicesQuery.data as Device[]
 
   const table = useReactTable({
-    data: devicesQuery.data ?? [],
+    data: devicesData ?? [],
     columns: deviceTableColumns,
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,

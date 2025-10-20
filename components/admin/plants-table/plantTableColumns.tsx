@@ -21,7 +21,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Plant } from "@/interfaces/plant";
 import { translateSpecies } from "@/lib/utils";
-import { usePlants } from "@/hooks/admin/usePlants";
+import { usePlants } from "@/hooks/usePlants";
 import PlantForm from "@/components/forms/PlantForm";
 
 export const plantTableColumns: ColumnDef<Plant>[] = [
@@ -64,7 +64,7 @@ export const plantTableColumns: ColumnDef<Plant>[] = [
     id: "actions",
     header: "Ações",
     cell: ({ row }) => {
-      const { deletePlant } = usePlants();
+      const { deletePlant } = usePlants(true);
       const plant = row.original;
 
       return (

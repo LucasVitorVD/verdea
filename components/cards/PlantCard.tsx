@@ -43,13 +43,11 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import PlantPlaceHolder from "@/public/images/plant-placeholder.jpg";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "@/lib/axios";
-import { toast } from "sonner";
 import PlantForm from "../forms/PlantForm";
 import { useState } from "react";
 import { Badge } from "../ui/badge";
 import { translateSpecies, translateWateringFrequency } from "@/lib/utils";
+import { usePlants } from "@/hooks/usePlants";
 
 interface Props {
   plant: Plant;
@@ -57,23 +55,7 @@ interface Props {
 
 export default function PlantCard({ plant }: Props) {
   const [open, setOpen] = useState(false);
-  const queryClient = useQueryClient();
-
-  const deletePlantMutation = useMutation({
-    mutationFn: async (plantId: number) => {
-      return axiosInstance.delete(
-        process.env.NEXT_PUBLIC_API_URL + `/plant/delete/${plantId}`
-      );
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["getUserPlants"] });
-      toast.success("Planta excluída!");
-    },
-    onError: () => {
-      toast.error("Não foi possível excluir a planta!");
-    },
-    retry: 2,
-  });
+  const { deletePlant } = usePlants(false)
 
   return (
     <Card className="lg:w-96 overflow-hidden py-0 shadow-md transition-all hover:shadow-lg hover:translate-y-[-2px]">
@@ -279,7 +261,7 @@ export default function PlantCard({ plant }: Props) {
                         <Button variant="outline">Fechar</Button>
                       </DialogClose>
                       <DialogClose
-                        onClick={() => deletePlantMutation.mutate(plant.id!)}
+                        onClick={() => deletePlant.mutate(plant.id!)}
                         asChild
                       >
                         <Button
