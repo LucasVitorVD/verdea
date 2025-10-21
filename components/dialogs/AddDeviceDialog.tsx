@@ -16,7 +16,6 @@ import {
   CircleAlert,
   CircleCheckBig,
   CirclePlus,
-  Copy,
   Link2,
   Router,
   TabletSmartphone,
@@ -34,7 +33,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
-import { withMask } from "use-mask-input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
@@ -82,8 +80,8 @@ export default function AddDeviceDialog() {
     {
       number: 3,
       icon: TabletSmartphone,
-      title: "Interface de Configuração",
-      description: "Abra o navegador e acesse a página de configuração",
+      title: "Vincular à sua Conta",
+      description: "Localize o endereço MAC e adicione o dispositivo",
     },
     {
       number: 4,
@@ -260,14 +258,6 @@ export default function AddDeviceDialog() {
                     <li>
                       Aguarde cerca de 30 segundos para a inicialização completa
                     </li>
-                    <li>
-                      O LED azul deve piscar indicando que está em modo de
-                      configuração
-                    </li>
-                    <li>
-                      Se o LED não piscar, pressione o botão RESET por 3
-                      segundos
-                    </li>
                   </ol>
                 </CardContent>
               </Card>
@@ -277,13 +267,16 @@ export default function AddDeviceDialog() {
                   <CircleAlert />
                   <div>
                     <p className="text-sm font-semibold">Importante:</p>
-                    <p className="text-sm">
-                      Se o dispositivo já foi configurado anteriormente, ele
-                      lembrará as credenciais do Wi-Fi e se conectará
-                      automaticamente ao ligar. Nesse caso, basta ligar o
-                      dispositivo, aguardar a conexão e adiciná-lo na última
-                      etapa.
-                    </p>
+                    <ol className="list-decimal space-y-2 text-sm mt-2">
+                      <li>
+                        <strong>Já configurado antes?</strong> O dispositivo se
+                        conectará automaticamente. Pule para a Etapa 3.
+                      </li>
+                      <li>
+                        <strong>Primeira vez?</strong> Aguarde o dispositivo
+                        entrar em modo de configuração (~30 segundos).
+                      </li>
+                    </ol>
                   </div>
                 </CardContent>
               </Card>
@@ -310,16 +303,40 @@ export default function AddDeviceDialog() {
 
                   <ol className="list-decimal pl-4 space-y-2 text-sm">
                     <li>
-                      Abra as configurações de Wi-Fi do seu celular/computador
+                      Conecte-se à rede: <strong>VERDEA-SETUP</strong> com a
+                      senha: <strong>verdeasetup</strong>
                     </li>
-                    <li>Procure por uma rede chamada "VERDEA-SETUP-XXXX"</li>
                     <li>
-                      Conecte-se a esta rede com a senha:{" "}
-                      <strong>verdeasetup</strong>
+                      Acesse as configurações da rede ou digite no navegador:
+                      http://192.168.4.1
                     </li>
-                    <li>Aguarde a conexão ser estabelecida</li>
-                    <li>Vá para o próximo passo</li>
+                    <li>Clique em "Configure WiFi"</li>
+                    <li>Selecione sua rede Wi-Fi e digite a senha </li>
+                    <li>
+                      Digite seu e-mail cadastrado na plataforma Verdea e clique
+                      em "Save"
+                    </li>
+                    <li>Reconecte-se à sua rede Wi-Fi normal</li>
                   </ol>
+                </CardContent>
+              </Card>
+
+              <Card className="py-3 bg-amber-50">
+                <CardContent className="flex gap-3 text-amber-700">
+                  <CircleAlert />
+                  <div>
+                    <p className="text-sm font-semibold">Dicas:</p>
+                    <ol className="list-decimal space-y-2 text-sm mt-2">
+                      <li>
+                        O e-mail <strong>deve estar cadastrado</strong> na
+                        plataforma
+                      </li>
+                      <li>
+                        Você receberá um e-mail de confirmação após o vínculo
+                      </li>
+                      <li>O dispositivo tem 3 minutos para ser configurado</li>
+                    </ol>
+                  </div>
                 </CardContent>
               </Card>
             </div>
@@ -341,25 +358,17 @@ export default function AddDeviceDialog() {
 
               <Card className="py-3 bg-primary/30">
                 <CardContent className="space-y-3">
-                  <p className="font-semibold">Acessar configuração:</p>
+                  <p className="font-semibold">Como encontrar o MAC Address:</p>
 
-                  <ol className="list-decimal pl-4 space-y-2 text-sm">
+                  <ol className="pl-4 space-y-2 text-sm">
                     <li>
-                      No dispositivo utilizado para realizar a conexão, acesse a
-                      barra de pesquisa do navegador e acesse o endereço:
-                      192.168.4.1{" "}
-                      <Copy
-                        className="size-4 inline ml-px cursor-pointer"
-                        onClick={() =>
-                          navigator.clipboard.writeText("192.168.4.1")
-                        }
-                      />
+                      <strong>Opção 1:</strong> Pressione o botão físico do
+                      dispositivo e visualize no display LCD
                     </li>
-                    <li>A página de configuração será exibida</li>
-                    <li>Clique em "Configure WiFi"</li>
-                    <li>Selecione sua rede e informe a senha</li>
-                    <li>Clique em "Save"</li>
-                    <li>Reconecte-se à sua rede Wi-Fi normal</li>
+                    <li>
+                      <strong>Opção 2:</strong> Verifique o e-mail de
+                      confirmação recebido
+                    </li>
                   </ol>
                 </CardContent>
               </Card>
@@ -386,12 +395,12 @@ export default function AddDeviceDialog() {
 
                   <ol className="list-decimal pl-4 space-y-2 text-sm">
                     <li>
-                      Localize o endereço MAC no visor do dispositivo ou no
-                      e-mail que você recebeu.
+                      Informe o endereço MAC no campo abaixo (ex:
+                      C4:D8:D5:2D:01:A8)
                     </li>
                     <li>
-                      Insira o endereço no campo abaixo para vincular o
-                      dispositivo à sua conta.
+                      Clique em "Vincular" para vincular o dispositivo a sua
+                      conta
                     </li>
                   </ol>
 
@@ -407,13 +416,28 @@ export default function AddDeviceDialog() {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Endereço MAC</FormLabel>
-                              <FormControl ref={withMask("**:**:**:**:**:**")}>
+                              <FormControl>
                                 <Input
                                   id="macAddress"
                                   type="text"
                                   placeholder="Ex: B4:E8:F5:2W:05:F8"
                                   className="bg-secondary"
                                   {...field}
+                                  onChange={(e) => {
+                                    let value = e.target.value.replace(
+                                      /[^0-9A-Fa-f]/g,
+                                      ""
+                                    );
+
+                                    value = value.slice(0, 12);
+
+                                    const formatted =
+                                      value.match(/.{1,2}/g)?.join(":") ||
+                                      value;
+
+                                    field.onChange(formatted);
+                                  }}
+                                  maxLength={17}
                                 />
                               </FormControl>
                               <FormMessage />

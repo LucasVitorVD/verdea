@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { Device } from "@/interfaces/device";
 import { Input } from "@/components/ui/input";
@@ -13,22 +12,19 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { deviceTableColumns } from "./deviceTableColumns";
 import { DataTable } from "@/components/data-table/index";
-import axiosInstance from "@/lib/axios";
 import { Search } from "lucide-react";
 import EmptyState from "../empty-state";
 import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
 import { useDevices } from "@/hooks/useDevice";
 
 export default function DevicesTable() {
-  const [page, setPage] = useState(1);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
     { id: "status", value: "signed" },
   ]);
   const { devicesQuery } = useDevices(false)
-  const devicesData = devicesQuery.data as Device[]
 
   const table = useReactTable({
-    data: devicesData ?? [],
+    data: devicesQuery.data as Device[] ?? [],
     columns: deviceTableColumns,
     getCoreRowModel: getCoreRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -40,7 +36,7 @@ export default function DevicesTable() {
     },
   });
 
-  if (devicesData?.length === 0) {
+  if (devicesQuery.data && devicesQuery.data.length === 0) {
     return (
       <EmptyState
         title="Nenhum dispositivo encontrado… por enquanto!"
@@ -81,24 +77,8 @@ export default function DevicesTable() {
           />
 
           <div className="text-muted-foreground flex-1 text-sm mt-2">
-            <p>Total: {devicesData?.length}</p>
+            <p>Total: {devicesQuery.data?.length ?? 0}</p>
           </div>
-          {/* <DataTable.Pagination>
-            <DataTable.PaginationAction
-              variant="outline"
-              size="sm"
-              onClick={() => setPage((prev) => prev - 1)}
-            >
-              Anterior
-            </DataTable.PaginationAction>
-            <DataTable.PaginationAction
-              variant="outline"
-              size="sm"
-              onClick={() => setPage((prev) => prev + 1)}
-            >
-              Próximo
-            </DataTable.PaginationAction>
-          </DataTable.Pagination> */}
         </DataTable.Root>
       </CardContent>
     </Card>
