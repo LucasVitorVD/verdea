@@ -22,7 +22,7 @@ import {
   Wifi,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import {
   Form,
@@ -36,10 +36,8 @@ import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "@/lib/axios";
-import { toast } from "sonner";
 import { celebrations } from "@/lib/celebrations";
+import { useDevices } from "@/hooks/useDevice";
 
 const assignDeviceFormSchema = z.object({
   macAddress: z
@@ -53,9 +51,8 @@ const assignDeviceFormSchema = z.object({
 export default function AddDeviceDialog() {
   const [currentStep, setCurrentStep] = useState(1);
   const [openDialog, setOpenDialog] = useState(false);
-  const queryClient = useQueryClient();
-  const retryCountRef = useRef(0);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const { assignDevice } = useDevices(false);
 
   const form = useForm<z.infer<typeof assignDeviceFormSchema>>({
     resolver: zodResolver(assignDeviceFormSchema),
@@ -91,90 +88,24 @@ export default function AddDeviceDialog() {
     },
   ];
 
-  const assignDeviceMutation = useMutation({
-    mutationFn: async (macAddress: string) => {
-      const response = await axiosInstance.patch(
-        process.env.NEXT_PUBLIC_API_URL + "/device/assign/" + macAddress
-      );
+  const onSubmit = async (values: z.infer<typeof assignDeviceFormSchema>) => {
+    const macAddress = values.macAddress;
 
-      return response;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "user", "devices"] });
+    assignDevice.mutate({ macAddress: macAddress });
+  };
 
-      setOpenDialog(false);
-
+  useEffect(() => {
+    if (assignDevice.isSuccess) {
       if (!buttonRef.current) return;
 
       const rect = buttonRef.current.getBoundingClientRect();
-
       const x = (rect.left + rect.width / 2) / window.innerWidth;
       const y = (rect.top + rect.height / 2) / window.innerHeight;
 
       celebrations.device({ x, y });
-    },
-  });
-
-  const onSubmit = async (values: z.infer<typeof assignDeviceFormSchema>) => {
-    const macAddress = values.macAddress;
-
-    const retryMutation = () => {
-      const MAX_ATTEMPTS = 5;
-
-      if (
-        assignDeviceMutation.isPending ||
-        retryCountRef.current >= MAX_ATTEMPTS
-      )
-        return;
-
-      toast.promise(assignDeviceMutation.mutateAsync(macAddress), {
-        loading: "Processando...",
-        success: () => {
-          retryCountRef.current = 0;
-
-          return {
-            message: "Dispositivo vínculado!",
-          };
-        },
-        error: (error) => {
-          retryCountRef.current += 1;
-
-          let errorDescription =
-            "Ocorreu um erro ao vincular o dispositivo. Por favor, tente novamente mais tarde.";
-
-          if (retryCountRef.current + 1 >= MAX_ATTEMPTS) {
-            setTimeout(() => {
-              retryCountRef.current = 0;
-            }, 60000);
-          }
-
-          return {
-            message: "Erro ao vincular dispositivo.",
-            description:
-              retryCountRef.current + 1 >= MAX_ATTEMPTS
-                ? "Limite de tentativas atingido. Tente novamente em 1 minuto."
-                : error.response?.data?.message || errorDescription,
-            action: retryCountRef.current + 1 < MAX_ATTEMPTS && {
-              label: "Reenviar",
-              onClick: retryMutation,
-              children: (
-                <Button disabled={assignDeviceMutation.isPending}>
-                  Reenviar
-                </Button>
-              ),
-            },
-            style: {
-              background: "hsl(0 50% 45%)",
-              color: "white",
-              border: "1px solid hsl(0 50% 45%)",
-            },
-          };
-        },
-      });
-    };
-
-    retryMutation();
-  };
+      setOpenDialog(false);
+    }
+  }, [assignDevice.isSuccess]);
 
   const handleGoBack = () => {
     if (currentStep > 1) {
@@ -204,7 +135,11 @@ export default function AddDeviceDialog() {
                 const isActive = currentStep === step.number;
                 const isCompleted = currentStep > step.number;
                 return (
-                  <div key={step.number} className="flex items-center">
+                  <div
+                    key={step.number}
+                    className="flex items-center"
+                    onClick={() => setCurrentStep(step.number)}
+                  >
                     <div
                       className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
                         isCompleted
@@ -270,7 +205,10 @@ export default function AddDeviceDialog() {
                     <ol className="list-decimal space-y-2 text-sm mt-2">
                       <li>
                         <strong>Já configurado antes?</strong> O dispositivo se
-                        conectará automaticamente. Pule para a Etapa 3.
+                        conectará automaticamente.{" "}
+                        <span className="underline cursor-pointer" onClick={() => setCurrentStep(3)}>
+                          Pule para a Etapa 3.
+                        </span>
                       </li>
                       <li>
                         <strong>Primeira vez?</strong> Aguarde o dispositivo
@@ -473,9 +411,9 @@ export default function AddDeviceDialog() {
                 ref={buttonRef}
                 className="flex items-center gap-2"
                 onClick={form.handleSubmit(onSubmit)}
-                disabled={assignDeviceMutation.isPending}
+                disabled={assignDevice.isPending}
               >
-                {assignDeviceMutation.isPending ? "Vinculando..." : "Vincular"}
+                {assignDevice.isPending ? "Vinculando..." : "Vincular"}
                 <Link2 />
               </Button>
             )}
