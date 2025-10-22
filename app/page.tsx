@@ -359,11 +359,11 @@ export default function Home() {
         </section>
 
         <section className="flex flex-col items-center gap-10 py-15 px-6 bg-primary">
-          <div className="text-center space-y-4 text-white">
-            <h2 className="text-3xl font-bold">
+          <div className="flex flex-col items-center justify-center space-y-4 text-white">
+            <h2 className="text-3xl font-bold text-center">
               Pronto para Revolucionar o Cuidado com suas Plantas?
             </h2>
-            <p className="text-xl max-w-2xl">
+            <p className="text-xl max-w-2xl text-center">
               Junte-se a milhares de pessoas que já estão usando o Verdea para
               cuidar melhor de suas plantas.
             </p>
