@@ -1,5 +1,5 @@
 import { NavigationItems } from "@/interfaces/navigationItem";
-import { Home, Leaf, RadioReceiver, Droplets, Settings } from "lucide-react";
+import { Home, Leaf, RadioReceiver, Droplets } from "lucide-react";
 
 export const publicPageNavigation: NavigationItems[] = [
   {
@@ -8,19 +8,23 @@ export const publicPageNavigation: NavigationItems[] = [
   },
   {
     title: "Funcionalidades",
-    href: "#funcionalidades",
+    href: "/#funcionalidades",
   },
   {
     title: "Como funciona",
-    href: "#como-funciona",
+    href: "/#como-funciona",
   },
   {
     title: "Hardware",
-    href: "#hardware",
+    href: "/#hardware",
   },
   {
     title: "FAQ",
-    href: "#faq",
+    href: "/#faq",
+  },
+  {
+    title: "Sobre nós",
+    href: "/about-us",
   },
 ];
 

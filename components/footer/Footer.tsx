@@ -24,7 +24,7 @@ export default function Footer({ navigationItems }: Props) {
   return (
     <footer className="py-10 px-12">
       <div className="grid md:grid-cols-4 gap-6 pb-12">
-        <div className="space-y-2">
+        <div className="space-y-2 md:col-span-2">
           <Link href="/" className="flex items-center gap-1.5">
             <Droplet className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">Verdea</span>
@@ -45,17 +45,6 @@ export default function Footer({ navigationItems }: Props) {
                 {item.title}
               </Link>
             ))}
-          </nav>
-        </div>
-        <div className="space-y-2">
-          <h3 className="text-xl">Empresa</h3>
-          <nav className="space-y-2">
-            <Link
-              href="/sobre"
-              className="text-muted-foreground block hover:underline"
-            >
-              Sobre Nós
-            </Link>
           </nav>
         </div>
         <div className="space-y-2">

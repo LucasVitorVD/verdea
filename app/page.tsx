@@ -5,7 +5,6 @@ import {
   Check,
   Droplet,
   Droplets,
-  Leaf,
   Smartphone,
   Zap,
 } from "lucide-react";
@@ -20,6 +19,7 @@ import Esp32Model from "@/components/3dModel/Esp32Model";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { publicPageNavigation } from "@/lib/navigation";
+import { TypingAnimation } from "@/components/ui/typing-animation";
 
 const featuresCards = [
   {
@@ -63,6 +63,10 @@ export default function Home() {
               className="w-full h-full object-cover brightness-50"
             >
               <source src="/stand-irrigation.mp4" type="video/mp4" />
+              <img
+                src="/images/agricultora.jpg"
+                alt="Uma imagem de fallback para navegadores não suportados."
+              />
             </video>
           </div>
 
@@ -71,7 +75,15 @@ export default function Home() {
             <div className="container mx-auto px-4">
               <div className="max-w-3xl mx-auto text-center text-white">
                 <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                  Cuide das suas plantas de forma inteligente
+                  Cuide das suas plantas de forma{" "}
+                  <TypingAnimation
+                    words={["inteligente", "automatizada", "eficiente"]}
+                    typeSpeed={50}
+                    deleteSpeed={150}
+                    pauseDelay={2000}
+                    cursorStyle="underscore"
+                    loop
+                  />
                 </h1>
                 <p className="text-xl md:text-2xl mb-8 text-white/90">
                   O Verdea é um sistema de irrigação automática que monitora e
@@ -180,8 +192,8 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Adicione suas plantas ao sistema, informando dados como espécie e
-                  dispositivo.
+                  Adicione suas plantas ao sistema, informando dados como
+                  espécie e dispositivo.
                 </p>
               </CardContent>
             </Card>
