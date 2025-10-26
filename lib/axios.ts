@@ -82,11 +82,9 @@ axiosInstance.interceptors.response.use(
 export const refreshCsrfToken = async () => {
   try {
     await axiosInstance.get("/csrf");
-    console.log("CSRF token refreshed successfully");
 
     return true;
   } catch (error) {
-    console.error("Error refreshing CSRF token:", error);
     return false
   }
 }

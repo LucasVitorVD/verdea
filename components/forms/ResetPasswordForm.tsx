@@ -16,7 +16,12 @@ import {
 } from "../ui/form";
 import PasswordInput from "./PasswordInput";
 import { useAuth } from "@/context/AuthContext";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
+
+interface Props {
+  token?: string;
+}
 
 const resetPasswordFormSchema = z
   .object({
@@ -30,13 +35,9 @@ const resetPasswordFormSchema = z
     message: "As senhas não coincidem",
   });
 
-export default function ResetPasswordForm() {
+export default function ResetPasswordForm({ token }: Props) {
   const { resetPasswordMutation } = useAuth();
-
-  const searchParams = useSearchParams()
-  const router = useRouter()
- 
-  const token = searchParams.get('token')
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof resetPasswordFormSchema>>({
     resolver: zodResolver(resetPasswordFormSchema),
@@ -48,33 +49,47 @@ export default function ResetPasswordForm() {
 
   async function onSubmit(values: z.infer<typeof resetPasswordFormSchema>) {
     const retryMutation = () => {
-      toast.promise(resetPasswordMutation.mutateAsync({ token: token!, newPassword: values.password }), {
-        loading: "Processando...",
-        success: () => {
-          router.push("/register?tab=login")
-          return {
-            message: "Nova senha registrada!",
-          };
-        },
-        error: () => {
-          return {
-            message:
-              resetPasswordMutation.error?.message || "Erro ao mudar senha",
-            action: {
-              label: "Reenviar",
-              onClick: retryMutation,
-              children: (
-                <Button disabled={resetPasswordMutation.isPending}>Reenviar</Button>
-              ),
-            },
-            style: {
-              background: "hsl(0 50% 45%)",
-              color: "white",
-              border: "1px solid hsl(0 50% 45%)",
-            },
-          };
-        },
-      });
+      toast.promise(
+        resetPasswordMutation.mutateAsync({
+          token: token!,
+          newPassword: values.password,
+        }),
+        {
+          loading: "Processando...",
+          success: () => {
+            router.push("/register?tab=login");
+            return {
+              message: "Nova senha registrada!",
+            };
+          },
+          error: () => {
+            const err = resetPasswordMutation.error;
+            let message = "Erro ao mudar senha";
+
+            if (err instanceof AxiosError && err.response) {
+              message = err.response.data.message;
+            }
+
+            return {
+              message,
+              action: {
+                label: "Reenviar",
+                onClick: retryMutation,
+                children: (
+                  <Button disabled={resetPasswordMutation.isPending}>
+                    Reenviar
+                  </Button>
+                ),
+              },
+              style: {
+                background: "hsl(0 50% 45%)",
+                color: "white",
+                border: "1px solid hsl(0 50% 45%)",
+              },
+            };
+          },
+        }
+      );
     };
 
     retryMutation();
@@ -112,7 +127,11 @@ export default function ResetPasswordForm() {
             )}
           />
 
-          <Button type="submit" className="w-full cursor-pointer" disabled={resetPasswordMutation.isPending}>
+          <Button
+            type="submit"
+            className="w-full cursor-pointer"
+            disabled={resetPasswordMutation.isPending}
+          >
             Mudar Senha
           </Button>
         </div>

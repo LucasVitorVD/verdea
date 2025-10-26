@@ -32,7 +32,7 @@ export function NavSections({ items }: NavSectionsProps) {
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Seções</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {user.data && user.data.role === "USER" && items.map((item) => (
           <SidebarMenuItem
             key={item.name}
             className={

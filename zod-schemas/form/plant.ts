@@ -92,12 +92,12 @@ export const plantFormSchema = z.object({
           });
         }
         
-        if (secondMinutes - firstMinutes < 30) {
+        if (secondMinutes - firstMinutes < 180) {
           ctx.addIssue({
             path: ["wateringTimes"],
             code: z.ZodIssueCode.custom,
             message:
-              "Recomendamos que os horários tenham pelo menos 30 minutos de diferença",
+              "Recomendamos que os horários tenham pelo menos 3 horas de diferença",
           });
         }
       }

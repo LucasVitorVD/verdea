@@ -1,7 +1,7 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { Shield, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Badge } from "@/components/ui/badge";

@@ -6,7 +6,6 @@ import StatsCards from "@/components/stats-cards/StatsCards";
 import { useAuth } from "@/context/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UsersTable from "@/components/admin/users-table/UsersTable";
-import DevicesTable from "@/components/devices-table/DevicesTable";
 import PlantsTable from "@/components/admin/plants-table/PlantsTable";
 import DevicesTableAdmin from "@/components/admin/devices-table/DevicesTableAdmin";
 

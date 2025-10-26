@@ -16,6 +16,7 @@ import EmptyState from "@/components/empty-state";
 import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
 import { useDevices } from "@/hooks/useDevice";
 import { Device } from "@/interfaces/device";
+import AddDeviceDialog from "@/components/dialogs/AddDeviceDialog";
 
 export default function DevicesTableAdmin() {
   const [page, setPage] = useState(1);
@@ -40,12 +41,15 @@ export default function DevicesTableAdmin() {
 
   if (devicesQuery.data?.length === 0) {
     return (
-      <EmptyState
-        title="Nenhum dispositivo encontrado… por enquanto!"
-        description="Adicione seu primeiro dispositivo e acompanhe tudo com a ajuda da Verdea, em tempo real."
-        imgSrc={EmptyIllustration}
-        imgAlt="Ilustração de dispositivo não encontrado"
-      />
+      <div className="flex flex-col items-center gap-4">
+        <EmptyState
+          title="Nenhum dispositivo encontrado… por enquanto!"
+          description="Adicione seu primeiro dispositivo e acompanhe tudo com a ajuda da Verdea, em tempo real."
+          imgSrc={EmptyIllustration}
+          imgAlt="Ilustração de dispositivo não encontrado"
+        />
+        <AddDeviceDialog />
+      </div>
     );
   }
 

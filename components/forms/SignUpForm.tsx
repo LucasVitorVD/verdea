@@ -47,7 +47,7 @@ export default function SignUpForm() {
         },
         error: () => {
           return {
-            message: signUpMutation.error?.message || "Erro ao criar usuário",
+            message: signUpMutation.error?.response.data.message || "Erro ao criar usuário",
             action: {
               label: "Reenviar",
               onClick: retryMutation,

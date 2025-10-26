@@ -38,6 +38,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { celebrations } from "@/lib/celebrations";
 import { useDevices } from "@/hooks/useDevice";
+import { useAuth } from "@/context/AuthContext";
 
 const assignDeviceFormSchema = z.object({
   macAddress: z
@@ -52,7 +53,8 @@ export default function AddDeviceDialog() {
   const [currentStep, setCurrentStep] = useState(1);
   const [openDialog, setOpenDialog] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const { assignDevice } = useDevices(false);
+  const { userQuery } = useAuth()
+  const { assignDevice } = useDevices(userQuery.data?.role === "ADMIN");
 
   const form = useForm<z.infer<typeof assignDeviceFormSchema>>({
     resolver: zodResolver(assignDeviceFormSchema),
@@ -130,7 +132,7 @@ export default function AddDeviceDialog() {
               sua conta.
             </DialogDescription>
 
-            <div className="flex items-center justify-center mt-2">
+            <div className="hidden md:flex items-center justify-center mt-2">
               {steps.map((step, index) => {
                 const isActive = currentStep === step.number;
                 const isCompleted = currentStep > step.number;
