@@ -10,7 +10,7 @@ export default function Esp32Model() {
       <ambientLight intensity={1.25} />
       <directionalLight intensity={0.6} />
       <Model scale={2} rotation={[-Math.PI / 3, 4.2, 0]} />
-      <Environment preset="sunset" />
+      <Environment files={"/hdri/venice_sunset_1k.hdr"} />
       <OrbitControls autoRotate autoRotateSpeed={2} enableZoom={false} />
     </Canvas>
   );
