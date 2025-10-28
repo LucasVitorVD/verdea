@@ -5,28 +5,20 @@ import axiosInstance, { refreshCsrfToken } from "@/lib/axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { toast } from "sonner";
 
 function useAuthValue() {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const userQuery = useQuery({
     queryKey: ["user"],
     queryFn: async () => {
-      try {
-        const response = await axiosInstance.get<User>(
-          `/user/me`
-        );
-        return response.data;
-      } catch (error) {
-        if (error instanceof AxiosError && error.response?.status === 401) {
-          queryClient.setQueryData(["user"], null);
-        }
-        throw error;
-      }
+      const response = await axiosInstance.get<User>(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/me`
+      );
+      return response.data;
     },
     retry: (failureCount, error: AxiosError) => {
       if (error?.response?.status === 401 && failureCount < 2) {
@@ -34,53 +26,39 @@ function useAuthValue() {
       }
       return false;
     },
-    refetchOnWindowFocus: false
-  });
-
-  const loginMutation = useMutation({
-    mutationFn: async (user: { email: string; password: string }) =>
-      axiosInstance.post(`/auth/login`, user),
-    onSuccess: async () => {
-      // Força uma nova busca do usuário
-      await queryClient.invalidateQueries({ queryKey: ["user"] });
-      
-      // Aguarda a query do usuário ser atualizada
-      await queryClient.refetchQueries({ queryKey: ["user"] });
-      
-      // Pequeno delay para garantir que tudo foi processado
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 100);
-    },
-    onError: (error: any) => {
-      const message =
-        error?.response?.data?.message ||
-        "Erro ao fazer login. Tente novamente.";
-      toast.error(message);
-    },
+    refetchOnWindowFocus: false,
   });
 
   const signUpMutation = useMutation({
     mutationFn: async (newUser: { email: string; password: string }) =>
-      axiosInstance.post(`/auth/register`, newUser),
-    onSuccess: () => {
-      toast.success("Conta criada com sucesso! Faça login.");
-      router.push("/register?tab=login");
-    },
+      axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+        newUser
+      ),
+    onSuccess: () => router.push("/register?tab=login"),
     onError: (error: any) => {
       const message =
         error?.response?.data?.message ||
         "Ocorreu um erro ao criar uma nova conta. Tente novamente mais tarde.";
-      toast.error(message);
+
+      return message;
+    },
+  });
+
+  const loginMutation = useMutation({
+    mutationFn: async (user: { email: string; password: string }) =>
+      axiosInstance.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, user),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      router.push("/dashboard");
     },
   });
 
   const logoutMutation = useMutation({
     mutationFn: async () =>
-      axiosInstance.post(`/auth/logout`),
+      axiosInstance.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`),
     onSuccess: () => {
       queryClient.setQueryData(["user"], null);
-      queryClient.removeQueries({ queryKey: ["user"] });
       toast.success("Logout realizado com sucesso!");
       router.push("/register?tab=login");
     },
@@ -90,12 +68,18 @@ function useAuthValue() {
 
   const forgotPasswordMutation = useMutation({
     mutationFn: async (email: { email: string }) =>
-      axiosInstance.post(`/auth/forgot-password`, email),
+      axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/forgot-password`,
+        email
+      ),
   });
 
   const resetPasswordMutation = useMutation({
     mutationFn: async (data: { token: string; newPassword: string }) =>
-      axiosInstance.post(`/auth/reset-password`, data),
+      axiosInstance.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`,
+        data
+      ),
   });
 
   return {
@@ -105,7 +89,6 @@ function useAuthValue() {
     logoutMutation,
     forgotPasswordMutation,
     resetPasswordMutation,
-    isInitialLoad,
   };
 }
 
