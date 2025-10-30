@@ -278,9 +278,6 @@ export default function PlantCard({ plant }: Props) {
             </div>
           </SheetContent>
         </Sheet>
-        <Button variant="default" className="cursor-pointer">
-          <Droplet className="text-secondary" /> Irrigar agora
-        </Button>
       </CardFooter>
     </Card>
   );
