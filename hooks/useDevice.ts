@@ -54,6 +54,23 @@ export function useDevices(isAdmin: boolean = false) {
     },
   });
 
+  const unassignDevice = useMutation({
+    mutationFn: async (deviceId: number) => {
+      const url = `${baseUrl}/admin/devices/unassign/${deviceId}`
+      return axiosInstance.patch(url);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey });
+      toast.success("Dispositivo desvinculado com sucesso!");
+    },
+    onError: (error: AxiosError<any>) => {
+      const msg =
+        error.response?.data?.message ||
+        "Erro ao desvincular o dispositivo. Por favor, tente novamente.";
+      toast.error(msg);
+    },
+  });
+
   const updateDevice = useMutation({
     mutationFn: async (device: Partial<Device> & { id: number }) => {
       const url = `${baseUrl}${isAdmin ? "/admin/devices" : "/device"}`
@@ -93,6 +110,7 @@ export function useDevices(isAdmin: boolean = false) {
   return {
     devicesQuery,
     assignDevice,
+    unassignDevice,
     updateDevice,
     deleteDevice,
   };
