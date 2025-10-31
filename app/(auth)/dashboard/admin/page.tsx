@@ -1,16 +1,26 @@
 "use client";
 
 import { redirect } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import StatsCards from "@/components/stats-cards/StatsCards";
 import { useAuth } from "@/context/AuthContext";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UsersTable from "@/components/admin/users-table/UsersTable";
 import PlantsTable from "@/components/admin/plants-table/PlantsTable";
 import DevicesTableAdmin from "@/components/admin/devices-table/DevicesTableAdmin";
+import { useSearchParams } from "next/navigation";
 
 export default function AdminPage() {
+  const [currentTab, setCurrentTab] = useState("users");
+  
   const { userQuery } = useAuth();
+  const searchParams = useSearchParams();
+
+  const tab = searchParams.get("tab") ?? "users";
+
+  useEffect(() => {
+    setCurrentTab(tab);
+  }, [tab]);
 
   useEffect(() => {
     if (userQuery.data?.role !== "ADMIN") {
@@ -31,7 +41,7 @@ export default function AdminPage() {
 
       <StatsCards />
 
-      <Tabs defaultValue="users" className="w-full">
+      <Tabs defaultValue="users" value={currentTab} onValueChange={setCurrentTab} className="w-full">
         <TabsList>
           <TabsTrigger value="users">Usuários</TabsTrigger>
           <TabsTrigger value="devices">Dispositivos</TabsTrigger>

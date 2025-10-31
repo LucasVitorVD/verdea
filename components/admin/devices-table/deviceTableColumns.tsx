@@ -36,11 +36,6 @@ import { useState } from "react";
 
 export const deviceTableColumns: ColumnDef<Device>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => <div>{row.original.id}</div>,
-  },
-  {
     id: "device-name",
     accessorFn: (row) => row.name,
     header: "Nome",

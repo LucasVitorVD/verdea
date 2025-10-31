@@ -1,9 +1,15 @@
+"use client";
+
 import ActivityCard from "@/components/cards/ActivityCard";
 import PrivacyCard from "@/components/cards/PrivacyCard";
 import ProfileCard from "@/components/cards/ProfileCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/context/AuthContext";
 
 export default function ProfilePage() {
+  const { userQuery } = useAuth()
+  const user = userQuery.data;
+
   return (
     <section className="flex flex-col flex-1 py-4 px-4 gap-10 md:p-6">
       <div>
@@ -16,7 +22,9 @@ export default function ProfilePage() {
       <Tabs defaultValue="profile">
         <TabsList>
           <TabsTrigger value="profile">Perfil</TabsTrigger>
-          <TabsTrigger value="activity">Atividade</TabsTrigger>
+          {user && user.role !== "ADMIN" && (
+            <TabsTrigger value="activity">Atividade</TabsTrigger>
+          )}
           <TabsTrigger value="privacy">Privacidade</TabsTrigger>
         </TabsList>
         <TabsContent value="profile">

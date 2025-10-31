@@ -1,7 +1,21 @@
+"use client";
+
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { SectionCards } from "@/components/section-cards";
+import { useAuth } from "@/context/AuthContext";
+import { redirect } from "next/navigation";
+import { useEffect } from "react";
 
 export default function DashboardPage() {
+  const { userQuery } = useAuth()
+  const user = userQuery.data;
+
+  useEffect(() => {
+    if (user && user.role === "ADMIN") {
+      redirect("/dashboard/admin");
+    }
+  }, [user]);
+
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">

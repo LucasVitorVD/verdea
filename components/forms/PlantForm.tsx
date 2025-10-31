@@ -23,10 +23,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { plantFormSchema, PlantFormSchema } from "@/zod-schemas/form/plant";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { Slider } from "../ui/slider";
-import EmptyState from "../empty-state";
-import EmptyStateIllustration from "@/public/images/illustrations/undraw_gardening.svg";
 import { Plant } from "@/interfaces/plant";
 import TimePicker from "./TimePicker";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -34,6 +31,7 @@ import { Label } from "@/components/ui/label";
 import { usePlants } from "@/hooks/usePlants";
 import { useDevices } from "@/hooks/useDevice";
 import { handleUploadImage } from "@/lib/uploadImage";
+import DeviceEmptyState from "../empty-states/DeviceEmptyState";
 
 interface PlantFormProps {
   data?: Plant;
@@ -453,20 +451,7 @@ export default function PlantForm({
             render={({ field }) => (
               <FormItem>
                 {devicesQuery.data?.length === 0 ? (
-                  <div className="flex flex-col items-center gap-4">
-                    <EmptyState
-                      title="Nenhum dispositivo encontrado"
-                      description="Você ainda não possui dispositivos conectados. Adicione um dispositivo ESP32 para monitorar suas plantas."
-                      imgSrc={EmptyStateIllustration}
-                      imgAlt="Sem dispositivos"
-                    />
-                    <Link
-                      href="/dashboard/devices"
-                      className="text-blue-500 text-center"
-                    >
-                      Adicionar dispositivo
-                    </Link>
-                  </div>
+                  <DeviceEmptyState />
                 ) : (
                   <>
                     <FormLabel>Selecione o Dispositivo ESP32</FormLabel>

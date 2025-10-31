@@ -44,11 +44,10 @@ export default function DevicesTableAdmin() {
       <div className="flex flex-col items-center gap-4">
         <EmptyState
           title="Nenhum dispositivo encontrado… por enquanto!"
-          description="Adicione seu primeiro dispositivo e acompanhe tudo com a ajuda da Verdea, em tempo real."
+          description="Assim que um novo dispositivo for ativado e se registrar na plataforma, ele aparecerá automaticamente aqui."
           imgSrc={EmptyIllustration}
           imgAlt="Ilustração de dispositivo não encontrado"
         />
-        <AddDeviceDialog />
       </div>
     );
   }

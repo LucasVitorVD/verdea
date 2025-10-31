@@ -26,11 +26,6 @@ import PlantForm from "@/components/forms/PlantForm";
 
 export const plantTableColumns: ColumnDef<Plant>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => <div>{row.original.id}</div>,
-  },
-  {
     id: "name",
     accessorFn: (row) => row.name,
     header: "Nome",

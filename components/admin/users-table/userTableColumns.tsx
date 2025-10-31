@@ -27,11 +27,6 @@ import { useUsers } from "@/hooks/admin/useUsers";
 
 export const userTableColumns: ColumnDef<User>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
-    cell: ({ row }) => <div>{row.original.id}</div>,
-  },
-  {
     id: "email",
     accessorFn: (row) => row.email,
     header: "Email",
