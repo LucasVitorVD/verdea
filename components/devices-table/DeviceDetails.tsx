@@ -27,9 +27,9 @@ interface Props {
 }
 
 export default function DeviceDetails({ device }: Props) {
-  const { deleteDevice } = useDevices(false)
+  const { deleteDevice, resetWifi } = useDevices(false)
 
-  const handleResetWifi = async (device: Device) => {
+  /* const handleResetWifi = async (device: Device) => {
     if (!device.currentIp) {
       toast.error("IP do dispositivo não encontrado!");
       return;
@@ -54,7 +54,7 @@ export default function DeviceDetails({ device }: Props) {
     } catch (err) {
       toast.error("❌ Erro ao se comunicar com o dispositivo!");
     }
-  };
+  }; */
 
   return (
     <div className="flex flex-col flex-1 p-4 gap-4">
@@ -135,7 +135,7 @@ export default function DeviceDetails({ device }: Props) {
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
               <AlertDialogAction
                 className="bg-yellow-500 cursor-pointer hover:bg-bg-yellow-500/90"
-                onClick={() => handleResetWifi(device)}
+                onClick={() => resetWifi.mutate(device.id)}
               >
                 Resetar Wi-Fi
               </AlertDialogAction>

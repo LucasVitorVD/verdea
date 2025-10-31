@@ -85,7 +85,8 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
     header: "Ações",
     cell: ({ row }) => {
       const [selectedUser, setSelectedUser] = useState<string | null>(null);
-      const { deleteDevice, assignDevice, unassignDevice } = useDevices(true);
+      const { deleteDevice, assignDevice, unassignDevice, resetWifi } =
+        useDevices(true);
       const { usersQuery } = useUsers();
       const device = row.original;
 
@@ -162,11 +163,13 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
                       </RadioGroup>
                     </form>
                     <SheetFooter>
-                      <SheetClose asChild>
-                        <Button type="submit" form="assign-user-form">
-                          Salvar alterações
-                        </Button>
-                      </SheetClose>
+                      {selectedUser && (
+                        <SheetClose asChild>
+                          <Button type="submit" form="assign-user-form">
+                            Salvar alterações
+                          </Button>
+                        </SheetClose>
+                      )}
                       <SheetClose asChild>
                         <Button variant="outline">Fechar</Button>
                       </SheetClose>
@@ -193,7 +196,35 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => unassignDevice.mutate(device.id!)}>
+                      <AlertDialogAction
+                        onClick={() => unassignDevice.mutate(device.id!)}
+                      >
+                        Continuar
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <AlertDialog>
+                  <AlertDialogTrigger className="text-sm pl-2 hover:cursor-pointer">
+                    Resetar Wifi
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Tem certeza que deseja resetar o Wifi deste dispositivo?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Esta ação não pode ser desfeita. Isso irá resetar o Wifi
+                        do dispositivo.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => resetWifi.mutate(device.id!)}
+                      >
                         Continuar
                       </AlertDialogAction>
                     </AlertDialogFooter>
@@ -202,11 +233,33 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
               </DropdownMenuItem>
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className="text-destructive hover:cursor-pointer"
-              onClick={() => deleteDevice.mutate(device.id!)}
-            >
-              Excluir
+            <DropdownMenuItem asChild>
+              <AlertDialog>
+                <AlertDialogTrigger className="text-sm text-destructive pl-2 hover:cursor-pointer">
+                  Excluir
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      Tem certeza que deseja excluir este dispositivo?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Esta ação não pode ser desfeita. Isso irá excluir
+                      permanentemente o dispositivo e remover todos os dados
+                      associados a ele.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => deleteDevice.mutate(device.id!)}
+                      className="bg-destructive text-white hover:bg-destructive/90"
+                    >
+                      Continuar
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -107,11 +107,35 @@ export function useDevices(isAdmin: boolean = false) {
     },
   });
 
+  const resetWifi = useMutation({
+    mutationFn: async (id: number) => {
+      const url = `${baseUrl}${isAdmin ? "/admin/devices/reset-wifi" : "/device/reset-wifi"}`
+
+      if (isAdmin) {
+        return axiosInstance.post(`${url}/${id}`);
+      }
+
+      return axiosInstance.post(
+        `${url}/${id}`
+      );
+    },
+    onSuccess: () => {
+      toast.success("Wifi resetado com sucesso!");
+    },
+    onError: (error: AxiosError<any>) => {
+      const msg =
+        error.response?.data?.message ||
+        "Erro ao resetar o Wifi do dispositivo. Por favor, tente novamente.";
+      toast.error(msg);
+    },
+  });
+
   return {
     devicesQuery,
     assignDevice,
     unassignDevice,
     updateDevice,
     deleteDevice,
+    resetWifi,
   };
 }
