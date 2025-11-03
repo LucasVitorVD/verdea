@@ -13,4 +13,9 @@ interface DashboardData {
   averageSoilMoisture: number
 }
 
-export type { DashboardData, LastIrrigation };
+interface SoilMoisture {
+  date: Date,
+  averageMoisture: number
+}
+
+export type { DashboardData, LastIrrigation, SoilMoisture };

@@ -26,7 +26,7 @@ export default function ActivityCard() {
         <CardHeader>
           <CardTitle>Resumo da Atividade</CardTitle>
           <CardDescription>
-            Veja como você tem usado o PlantCare.
+            Veja como você tem usado o Verdea.
           </CardDescription>
         </CardHeader>
         <CardContent>

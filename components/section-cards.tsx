@@ -53,7 +53,7 @@ export function SectionCards() {
       <Card>
         <CardHeader>
           <CardDescription>Última irrigação</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+          <CardTitle className="text-2xl font-semibold md:text-3xl">
             {dashboardData?.lastIrrigation
               ? new Date(dashboardData.lastIrrigation.date).toLocaleTimeString(
                   [],
@@ -73,10 +73,10 @@ export function SectionCards() {
           </div>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
+      <Card>
         <CardHeader>
           <CardDescription>Umidade média do solo</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+          <CardTitle className="text-2xl font-semibold md:text-3xl">
             {dashboardData
               ? `${dashboardData.averageSoilMoisture.toFixed(1)}%`
               : "0%"}
