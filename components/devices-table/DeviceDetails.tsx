@@ -16,7 +16,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { toast } from "sonner";
 import EmptyState from "../empty-state";
 import GardeningIllustration from "@/public/images/illustrations/undraw_gardening.svg";
 import Link from "next/link";
@@ -28,33 +27,6 @@ interface Props {
 
 export default function DeviceDetails({ device }: Props) {
   const { deleteDevice, resetWifi } = useDevices(false)
-
-  /* const handleResetWifi = async (device: Device) => {
-    if (!device.currentIp) {
-      toast.error("IP do dispositivo não encontrado!");
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/reset-wifi", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ip: device.currentIp,
-          username: process.env.NEXT_PUBLIC_ESP_USER,
-          password: process.env.NEXT_PUBLIC_ESP_PASS,
-        }),
-      });
-
-      if (response.status >= 200 && response.status < 300) {
-        toast.success("Dispositivo resetou o Wi-Fi!");
-      } else {
-        toast.warning("Não foi possível resetar o Wi-Fi!");
-      }
-    } catch (err) {
-      toast.error("❌ Erro ao se comunicar com o dispositivo!");
-    }
-  }; */
 
   return (
     <div className="flex flex-col flex-1 p-4 gap-4">

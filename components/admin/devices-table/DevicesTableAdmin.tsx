@@ -8,15 +8,21 @@ import {
   getFilteredRowModel,
   ColumnFiltersState,
 } from "@tanstack/react-table";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { deviceTableColumns } from "./deviceTableColumns";
 import { DataTable } from "@/components/data-table/index";
-import { Search } from "lucide-react";
+import { RotateCw, Search } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
 import { useDevices } from "@/hooks/useDevice";
 import { Device } from "@/interfaces/device";
-import AddDeviceDialog from "@/components/dialogs/AddDeviceDialog";
+import { Button } from "@/components/ui/button";
 
 export default function DevicesTableAdmin() {
   const [page, setPage] = useState(1);
@@ -24,7 +30,7 @@ export default function DevicesTableAdmin() {
     { id: "status", value: "signed" },
   ]);
   const { devicesQuery } = useDevices(true);
-  const devicesData = devicesQuery.data as Device[]
+  const devicesData = devicesQuery.data as Device[];
 
   const table = useReactTable({
     data: devicesData ?? [],
@@ -48,17 +54,34 @@ export default function DevicesTableAdmin() {
           imgSrc={EmptyIllustration}
           imgAlt="Ilustração de dispositivo não encontrado"
         />
+
+        <Button
+          variant="outline"
+          className="hover:cursor-pointer"
+          onClick={() => devicesQuery.refetch()}
+          disabled={devicesQuery.isFetching}
+        >
+          <RotateCw className={devicesQuery.isFetching ? "animate-spin" : ""} />
+          Atualizar
+        </Button>
       </div>
     );
   }
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Gerenciar Dispositivos</CardTitle>
-        <CardDescription>
-          Visualize e gerencie todos os dispositivos do sistema
-        </CardDescription>
+      <CardHeader className="flex justify-between items-center">
+        <div>
+          <CardTitle>Gerenciar Dispositivos</CardTitle>
+          <CardDescription>
+            Visualize e gerencie todos os dispositivos do sistema
+          </CardDescription>
+        </div>
+
+        <Button variant="outline" onClick={() => devicesQuery.refetch()} disabled={devicesQuery.isFetching}>
+          <RotateCw className={devicesQuery.isFetching ? "animate-spin" : ""} />
+          Atualizar
+        </Button>
       </CardHeader>
       <CardContent>
         <DataTable.Root>
