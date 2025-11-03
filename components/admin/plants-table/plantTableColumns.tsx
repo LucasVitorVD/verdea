@@ -1,15 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, Pen } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,11 +10,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Plant } from "@/interfaces/plant";
 import { translateSpecies } from "@/lib/utils";
 import { usePlants } from "@/hooks/usePlants";
 import PlantForm from "@/components/forms/PlantForm";
+import { Button } from "@/button";
 
 export const plantTableColumns: ColumnDef<Plant>[] = [
   {
@@ -46,7 +49,7 @@ export const plantTableColumns: ColumnDef<Plant>[] = [
     id: "mode",
     header: "Modo",
     cell: ({ row }) => {
-      const mode = row.original.mode
+      const mode = row.original.mode;
 
       return (
         <Badge variant={mode === "AUTO" ? "default" : "secondary"}>
@@ -71,23 +74,33 @@ export const plantTableColumns: ColumnDef<Plant>[] = [
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Sheet>
-                <SheetTrigger className="text-sm pl-2 hover:cursor-pointer">
+              <Dialog>
+                <DialogTrigger className="text-sm pl-2 cursor-pointer">
                   Editar
-                </SheetTrigger>
-                <SheetContent>
-                  <SheetHeader>
-                    <SheetTitle>Editar usuário</SheetTitle>
-                    <SheetDescription>
-                      Atualize as informações deste usuário. As alterações serão
-                      aplicadas imediatamente e poderão afetar suas permissões
-                      de acesso.
-                    </SheetDescription>
-                  </SheetHeader>
+                </DialogTrigger>
+                <DialogContent className="overflow-y-auto max-h-[90vh] lg:min-w-4xl">
+                  <DialogHeader>
+                    <DialogTitle>Editar planta</DialogTitle>
+                    <DialogDescription>
+                      Atualize os detalhes da planta conforme necessário.
+                    </DialogDescription>
+                  </DialogHeader>
 
-                  <PlantForm data={plant} />
-                </SheetContent>
-              </Sheet>
+                  <PlantForm data={plant} isAdmin />
+
+                  <DialogFooter className="flex justify-end gap-2">
+                    <DialogClose asChild>
+                      <Button variant="outline">Cancelar</Button>
+                    </DialogClose>
+                    <DialogClose>
+                      <Button type="submit" form="add-plant-form">
+                        <Pen className="mr-px size-4" />
+                        Editar Planta
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-destructive hover:cursor-pointer"

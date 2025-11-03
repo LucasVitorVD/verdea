@@ -19,4 +19,9 @@ interface DeviceAvailable {
   user: User
 }
 
-export type { Device, DeviceAvailable }
+interface DeviceAdmin extends Omit<Device, 'plantSummary'> {
+  userEmail: string | null,
+  plantName: string | null
+}
+
+export type { Device, DeviceAvailable, DeviceAdmin }

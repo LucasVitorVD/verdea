@@ -9,9 +9,9 @@ interface TimePickerProps {
 export default function TimePicker({ value = "10:30", onChange, className }: TimePickerProps) {
   const hours = Array.from({ length: 24 }, (_, i) => i.toString().padStart(2, '0'));
   const minutes = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
-  
-  const [hour, minute] = value.split(':');
-  
+
+  const [hour = "00", minute = "00"] = (value ?? "00:00").split(":");
+
   const updateTime = (newHour: string, newMinute: string) => {
     const newTime = `${newHour}:${newMinute}`;
     onChange?.(newTime);

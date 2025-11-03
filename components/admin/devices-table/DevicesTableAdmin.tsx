@@ -21,7 +21,7 @@ import { RotateCw, Search } from "lucide-react";
 import EmptyState from "@/components/empty-state";
 import EmptyIllustration from "@/public/images/illustrations/undraw_search-app.svg";
 import { useDevices } from "@/hooks/useDevice";
-import { Device } from "@/interfaces/device";
+import { DeviceAdmin } from "@/interfaces/device";
 import { Button } from "@/components/ui/button";
 
 export default function DevicesTableAdmin() {
@@ -30,7 +30,7 @@ export default function DevicesTableAdmin() {
     { id: "status", value: "signed" },
   ]);
   const { devicesQuery } = useDevices(true);
-  const devicesData = devicesQuery.data as Device[];
+  const devicesData = devicesQuery.data as DeviceAdmin[];
 
   const table = useReactTable({
     data: devicesData ?? [],

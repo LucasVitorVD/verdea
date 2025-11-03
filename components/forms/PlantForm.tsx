@@ -54,11 +54,16 @@ export default function PlantForm({
     resolver: zodResolver(plantFormSchema),
     defaultValues: data
       ? {
-          ...data,
-          image: null,
+          name: data.name ?? "",
+          species: data.species ?? "",
+          location: data.location ?? "",
+          notes: data.notes ?? "",
+          wateringFrequency: data.wateringFrequency ?? "once_a_day",
+          wateringTimes: data.wateringTimes ?? ["10:30", "18:30"],
+          idealSoilMoisture: data.idealSoilMoisture ?? 0,
           device: data.deviceSummary?.macAddress ?? "",
+          image: null,
           mode: data.mode ?? "AUTO",
-          wateringTimes: data.wateringTimes ?? [],
         }
       : {
           name: "",
@@ -355,7 +360,7 @@ export default function PlantForm({
                       <FormLabel>Horário de Irrigação</FormLabel>
                       <FormControl>
                         <TimePicker
-                          value={field.value}
+                          value={field.value ?? "10:30"}
                           onChange={field.onChange}
                         />
                       </FormControl>
@@ -376,7 +381,7 @@ export default function PlantForm({
                           <FormLabel>Primeiro Horário</FormLabel>
                           <FormControl>
                             <TimePicker
-                              value={field.value}
+                              value={field.value ?? "10:30"}
                               onChange={field.onChange}
                             />
                           </FormControl>
@@ -392,7 +397,7 @@ export default function PlantForm({
                           <FormLabel>Segundo Horário</FormLabel>
                           <FormControl>
                             <TimePicker
-                              value={field.value}
+                              value={field.value ?? "14:30"}
                               onChange={field.onChange}
                             />
                           </FormControl>

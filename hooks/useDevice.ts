@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios";
 import { toast } from "sonner";
-import type { Device, DeviceAvailable } from "@/interfaces/device";
+import type { Device, DeviceAdmin, DeviceAvailable } from "@/interfaces/device";
 import type { AxiosError } from "axios";
 
 interface AssignData {
@@ -22,7 +22,7 @@ export function useDevices(isAdmin: boolean = false) {
 
         const response = await axiosInstance.get(url);
 
-        return response.data as T extends true ? DeviceAvailable[] : Device[];
+        return response.data as T extends true ? DeviceAvailable[] : DeviceAdmin[];
       } catch (error) {
         toast.error("Erro ao carregar dispositivos.");
       }

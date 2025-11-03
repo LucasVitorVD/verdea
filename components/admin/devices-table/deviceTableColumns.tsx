@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import type { Device } from "@/interfaces/device";
+import type { DeviceAdmin } from "@/interfaces/device";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
@@ -41,13 +41,23 @@ import {
 } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { BadgeCheckIcon, BadgeXIcon, Ellipsis, User } from "lucide-react";
+import {
+  BadgeCheckIcon,
+  BadgeXIcon,
+  Ellipsis,
+  User,
+  UserRoundMinus,
+  UserRoundPlus,
+  Wifi,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useDevices } from "@/hooks/useDevice";
 import { useUsers } from "@/hooks/admin/useUsers";
 import { useState } from "react";
+import EmptyState from "@/components/empty-state";
+import GardeningIllustration from "@/public/images/illustrations/undraw_gardening.svg";
 
-export const deviceTableColumns: ColumnDef<Device>[] = [
+export const deviceTableColumns: ColumnDef<DeviceAdmin>[] = [
   {
     id: "device-name",
     accessorFn: (row) => row.name,
@@ -59,6 +69,16 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
     id: "mac-address",
     header: "MAC",
     cell: ({ row }) => <div>{row.original.macAddress}</div>,
+  },
+  {
+    id: "linked-user",
+    header: "Usuário Vinculado",
+    cell: ({ row }) => <div>{row.original.userEmail ?? "-"}</div>,
+  },
+  {
+    id: "linked-plant",
+    header: "Planta Vinculada",
+    cell: ({ row }) => <div>{row.original.plantName ?? "-"}</div>,
   },
   {
     id: "isOnline",
@@ -107,10 +127,11 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
           <DropdownMenuContent>
             <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <div className="flex flex-col items-start gap-2">
+            <div className="flex flex-col items-start gap-3">
               <DropdownMenuItem asChild>
                 <Sheet>
-                  <SheetTrigger className="text-sm pl-2 hover:cursor-pointer">
+                  <SheetTrigger className="flex items-center gap-1 text-sm pl-2 hover:cursor-pointer">
+                    <UserRoundPlus className="size-4" />
                     Vincular usuário
                   </SheetTrigger>
                   <SheetContent>
@@ -130,6 +151,15 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
                         value={selectedUser ?? ""}
                         onValueChange={setSelectedUser}
                       >
+                        {usersQuery.data && usersQuery.data.length === 0 && (
+                          <EmptyState
+                            title="Nenhum usuário encontrado... por enquanto!"
+                            description="Adicione um usuário para vincular ao dispositivo."
+                            imgSrc={GardeningIllustration}
+                            imgAlt="Ilustração de jardinagem"
+                          />
+                        )}
+
                         {usersQuery.data &&
                           usersQuery.data.length > 0 &&
                           usersQuery.data.map((user) => (
@@ -177,37 +207,41 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
                   </SheetContent>
                 </Sheet>
               </DropdownMenuItem>
+              {device.userEmail && (
+                <DropdownMenuItem asChild>
+                  <AlertDialog>
+                    <AlertDialogTrigger className="flex items-center gap-1 text-sm pl-2 hover:cursor-pointer">
+                      <UserRoundMinus className="size-4" />
+                      Desvincular usuário
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Tem certeza que deseja desvincular o usuário deste
+                          dispositivo?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Esta ação não pode ser desfeita. Isso irá desvincular
+                          o usuário do dispositivo, remover suas plantas e suas
+                          permissões de acesso.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => unassignDevice.mutate(device.id!)}
+                        >
+                          Continuar
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem asChild>
                 <AlertDialog>
-                  <AlertDialogTrigger className="text-sm pl-2 hover:cursor-pointer">
-                    Desvincular usuário
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Tem certeza que deseja desvincular o usuário deste
-                        dispositivo?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        Esta ação não pode ser desfeita. Isso irá desvincular o
-                        usuário do dispositivo, remover suas plantas e suas
-                        permissões de acesso.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                      <AlertDialogAction
-                        onClick={() => unassignDevice.mutate(device.id!)}
-                      >
-                        Continuar
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <AlertDialog>
-                  <AlertDialogTrigger className="text-sm pl-2 hover:cursor-pointer">
+                  <AlertDialogTrigger className="flex items-center gap-1 text-sm pl-2 hover:cursor-pointer">
+                    <Wifi className="size-4" />
                     Resetar Wifi
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -235,7 +269,7 @@ export const deviceTableColumns: ColumnDef<Device>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <AlertDialog>
-                <AlertDialogTrigger className="text-sm text-destructive pl-2 hover:cursor-pointer">
+                <AlertDialogTrigger className="text-sm text-destructive pl-2 py-1 hover:cursor-pointer">
                   Excluir
                 </AlertDialogTrigger>
                 <AlertDialogContent>

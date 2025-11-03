@@ -55,12 +55,30 @@ export default function UsersTable() {
 
   if (usersQuery.data?.length === 0) {
     return (
-      <EmptyState
-        title="Nenhum usuário encontrado… por enquanto!"
-        description="Adicione seu primeiro usuário e acompanhe tudo com a ajuda da Verdea, em tempo real."
-        imgSrc={EmptyIllustration}
-        imgAlt="Ilustração de usuário não encontrado"
-      />
+      <div className="flex flex-col items-center gap-4">
+        <EmptyState
+          title="Nenhum usuário encontrado… por enquanto!"
+          description="Adicione seu primeiro usuário e acompanhe tudo com a ajuda da Verdea, em tempo real."
+          imgSrc={EmptyIllustration}
+          imgAlt="Ilustração de usuário não encontrado"
+        />
+        <Sheet>
+          <SheetTrigger className={buttonVariants({ variant: "default" })}>
+            <BadgePlus />
+            Adicionar usuário
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Adicionar novo usuário</SheetTitle>
+              <SheetDescription>
+                Crie uma nova conta de usuário no sistema.
+              </SheetDescription>
+            </SheetHeader>
+
+            <UserForm />
+          </SheetContent>
+        </Sheet>
+      </div>
     );
   }
 

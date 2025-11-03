@@ -36,70 +36,70 @@ export const plantFormSchema = z.object({
   device: z.string().min(1, "Selecione um dispositivo"),
 })
   .superRefine((data, ctx) => {
-    if (data.mode === "SCHEDULED") {
-      if (!data.wateringFrequency) {
-        ctx.addIssue({
-          path: ["wateringFrequency"],
-          code: z.ZodIssueCode.custom,
-          message: "Selecione a frequência de irrigação",
-        });
-      }
+    if (data.mode !== "SCHEDULED") return;
 
-      if (!data.wateringTimes || data.wateringTimes.length === 0) {
+    if (!data.wateringFrequency) {
+      ctx.addIssue({
+        path: ["wateringFrequency"],
+        code: z.ZodIssueCode.custom,
+        message: "Selecione a frequência de irrigação",
+      });
+    }
+
+    if (!data.wateringTimes || data.wateringTimes.length === 0) {
+      ctx.addIssue({
+        path: ["wateringTimes"],
+        code: z.ZodIssueCode.custom,
+        message: "Informe pelo menos um horário de irrigação",
+      });
+    }
+
+    if (!data.idealSoilMoisture) {
+      ctx.addIssue({
+        path: ["idealSoilMoisture"],
+        code: z.ZodIssueCode.custom,
+        message: "Informe a umidade ideal do solo",
+      });
+    }
+
+    if (data.wateringFrequency === "twice_a_day" && data.wateringTimes) {
+      const [first, second] = data.wateringTimes;
+
+      if (!first || !second) {
         ctx.addIssue({
           path: ["wateringTimes"],
           code: z.ZodIssueCode.custom,
-          message: "Informe pelo menos um horário de irrigação",
+          message: "Informe os dois horários de irrigação",
         });
+        return;
       }
 
-      if (!data.idealSoilMoisture) {
+      const firstMinutes = timeStringToMinutes(first);
+      const secondMinutes = timeStringToMinutes(second);
+
+      if (firstMinutes === secondMinutes) {
         ctx.addIssue({
-          path: ["idealSoilMoisture"],
+          path: ["wateringTimes"],
           code: z.ZodIssueCode.custom,
-          message: "Informe a umidade ideal do solo",
+          message: "Os horários de irrigação não podem ser iguais",
         });
       }
 
-      if (data.wateringFrequency === "twice_a_day" && data.wateringTimes) {
-        const [first, second] = data.wateringTimes;
+      if (second < first) {
+        ctx.addIssue({
+          path: ["wateringTimes"],
+          code: z.ZodIssueCode.custom,
+          message: "O segundo horário deve ser após o primeiro",
+        });
+      }
 
-        if (!first || !second) {
-          ctx.addIssue({
-            path: ["wateringTimes"],
-            code: z.ZodIssueCode.custom,
-            message: "Informe os dois horários de irrigação",
-          });
-          return;
-        }
-
-        const firstMinutes = timeStringToMinutes(first);
-        const secondMinutes = timeStringToMinutes(second);
-
-        if (firstMinutes === secondMinutes) {
-          ctx.addIssue({
-            path: ["wateringTimes"],
-            code: z.ZodIssueCode.custom,
-            message: "Os horários de irrigação não podem ser iguais",
-          });
-        } 
-        
-        if (second < first) {
-          ctx.addIssue({
-            path: ["wateringTimes"],
-            code: z.ZodIssueCode.custom,
-            message: "O segundo horário deve ser após o primeiro",
-          });
-        }
-        
-        if (secondMinutes - firstMinutes < 180) {
-          ctx.addIssue({
-            path: ["wateringTimes"],
-            code: z.ZodIssueCode.custom,
-            message:
-              "Recomendamos que os horários tenham pelo menos 3 horas de diferença",
-          });
-        }
+      if (secondMinutes - firstMinutes < 180) {
+        ctx.addIssue({
+          path: ["wateringTimes"],
+          code: z.ZodIssueCode.custom,
+          message:
+            "Recomendamos que os horários tenham pelo menos 3 horas de diferença",
+        });
       }
     }
   });
