@@ -1,73 +1,93 @@
-import { IconTrendingUp } from "@tabler/icons-react"
+"use client";
 
-import { Badge } from "@/components/ui/badge"
 import {
   Card,
-  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
+import axiosInstance from "@/lib/axios";
+import { DashboardData } from "@/interfaces/dashboard";
 
 export function SectionCards() {
+  const { data: dashboardData } = useQuery({
+    queryKey: ["dashboardData"],
+    queryFn: async () => {
+      const response = await axiosInstance.get("/dashboard");
+
+      return response.data as DashboardData;
+    },
+  });
+
   return (
-    <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-      <Card className="@container/card">
+    <div className="grid grid-cols-1 gap-4 px-4 md:grid-cols-2 lg:px-6 lg:grid-cols-4">
+      <Card>
         <CardHeader>
           <CardDescription>Plantas registradas</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            12
+          <CardTitle className="text-2xl font-semibold md:text-3xl">
+            {dashboardData?.totalPlants ?? "0"}
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="text-muted-foreground">
-            + 2 novas plantas registradas
+            Monitorando o crescimento das plantas
           </div>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
+      <Card>
         <CardHeader>
-          <CardDescription>Dispositivos conectados</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            8
+          <CardDescription>Dispositivos</CardDescription>
+          <CardTitle className="text-2xl font-semibold md:text-3xl">
+            {dashboardData?.totalDevices ?? "0"}
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="text-muted-foreground">
-            7 online, 1 offline
+            {dashboardData?.onlineDevices ?? "0"} online,{" "}
+            {dashboardData?.offlineDevices ?? "0"} offline
           </div>
         </CardFooter>
       </Card>
-      <Card className="@container/card">
+      <Card>
         <CardHeader>
           <CardDescription>Última irrigação</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            2h atrás
+            {dashboardData?.lastIrrigation
+              ? new Date(dashboardData.lastIrrigation.date).toLocaleTimeString(
+                  [],
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                )
+              : "Sem registros"}
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="text-muted-foreground">
-            Irrigação concluída com sucesso
+            {dashboardData?.lastIrrigation
+              ? `Irrigação da planta ${dashboardData.lastIrrigation.plantName}`
+              : "Nenhuma irrigação registrada ainda"}
           </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Próxima irrigação</CardDescription>
+          <CardDescription>Umidade média do solo</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4h
+            {dashboardData
+              ? `${dashboardData.averageSoilMoisture.toFixed(1)}%`
+              : "0%"}
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="text-muted-foreground">
-            <Badge className="bg-green-500 text-white">
-              <IconTrendingUp className="size-4" />
-              Programada para 10:00
-            </Badge>
+            Média calculada com base no histórico
           </div>
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }

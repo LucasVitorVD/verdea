@@ -22,7 +22,7 @@ export function useDevices(isAdmin: boolean = false) {
 
         const response = await axiosInstance.get(url);
 
-        return response.data as T extends true ? DeviceAvailable[] : DeviceAdmin[];
+        return response.data as T extends true ? DeviceAvailable[] : DeviceAdmin[] | Device[];
       } catch (error) {
         toast.error("Erro ao carregar dispositivos.");
       }
