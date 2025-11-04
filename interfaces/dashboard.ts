@@ -18,4 +18,11 @@ interface SoilMoisture {
   averageMoisture: number
 }
 
-export type { DashboardData, LastIrrigation, SoilMoisture };
+interface ProfileDashboard {
+  totalPlants: number,
+  totalDevices: number,
+  totalIrrigationHistory: number,
+  engagementLevel: number
+}
+
+export type { DashboardData, LastIrrigation, SoilMoisture, ProfileDashboard };
