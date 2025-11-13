@@ -115,7 +115,7 @@ export default function AboutUsPage() {
 
           <div className="space-y-6 text-justify text-muted-foreground px-12 md:max-w-4xl">
             <p>
-              A Verdea é uma startup fundada em 2025 com o objetivo de
+              A EcoNativa é uma startup fundada em 2025 com o objetivo de
               revolucionar o cuidado de plantas através da tecnologia. Nascemos
               da observação de problemas reais enfrentados por pessoas que
               desejam cultivar suas próprias plantas e alimentos.

@@ -1,4 +1,4 @@
-import { Droplet, Github, Linkedin } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "../ui/separator";
 import {
@@ -13,9 +13,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { NavigationItems } from "@/interfaces/navigationItem";
+import Image from "next/image";
+import VerdeaLogo from "@/public/images/logo-verdea.png"
 
 interface Props {
-  navigationItems: NavigationItems[]
+  navigationItems: NavigationItems[];
 }
 
 export default function Footer({ navigationItems }: Props) {
@@ -26,8 +28,12 @@ export default function Footer({ navigationItems }: Props) {
       <div className="grid md:grid-cols-4 gap-6 pb-12">
         <div className="space-y-2 md:col-span-2">
           <Link href="/" className="flex items-center gap-1.5">
-            <Droplet className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold">Verdea</span>
+            <Image
+              src={VerdeaLogo}
+              alt="Logo Verdea"
+              width={130}
+              height={100}
+            />
           </Link>
           <p className="text-muted-foreground text-sm max-w-xs">
             Sistema de irrigação automática inteligente para suas plantas.

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Droplet } from "lucide-react";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -9,6 +8,8 @@ import {
 import MobileNavigation from "./MobileNavigation";
 import { NavigationItems } from "@/interfaces/navigationItem";
 import { buttonVariants } from "../ui/button";
+import Image from "next/image";
+import VerdeaLogo from "@/public/images/logo-verdea.png"
 
 interface Props {
   navigationItems: NavigationItems[];
@@ -16,10 +17,9 @@ interface Props {
 
 export default function Header({ navigationItems }: Props) {
   return (
-    <header className="flex justify-between px-16 py-6 sticky top-0 bg-white/80 backdrop-blur-lg z-50">
+    <header className="flex justify-between items-center px-8 py-6 sticky top-0 bg-white/80 backdrop-blur-lg z-50 md:px-16">
       <Link href="/" className="flex items-center gap-1.5">
-        <Droplet className="h-6 w-6 text-primary" />
-        <span className="text-xl font-bold">Verdea</span>
+        <Image src={VerdeaLogo} alt="Logo Verdea" width={130} height={100} />
       </Link>
 
       <NavigationMenu className="hidden lg:block">
