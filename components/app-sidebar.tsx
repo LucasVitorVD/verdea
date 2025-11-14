@@ -16,8 +16,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Droplet } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import VerdeaLogo from "@/public/images/logo-verdea.png"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -30,8 +31,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href="/" className="flex items-center gap-1.5">
-                <Droplet className="size-6 text-primary" />
-                <span className="text-xl font-bold">Verdea</span>
+                <Image
+                  src={VerdeaLogo}
+                  alt="Logo Verdea"
+                  width={130}
+                  height={100}
+                />
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
