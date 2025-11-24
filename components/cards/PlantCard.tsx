@@ -73,7 +73,7 @@ export default function PlantCard({ plant }: Props) {
       <CardContent className="flex flex-col gap-4">
         <div>
           <p className="text-2xl font-semibold">{plant.name}</p>
-          <p className="text-sm text-muted-foreground">{plant.species}</p>
+          <p className="text-sm text-muted-foreground">{translateSpecies(plant.species)}</p>
         </div>
 
         {/* Display plant details from MQTT*/}
