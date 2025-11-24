@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import {
@@ -5,6 +7,8 @@ import {
   Check,
   Droplet,
   Droplets,
+  Eye,
+  Leaf,
   Smartphone,
   Zap,
 } from "lucide-react";
@@ -15,11 +19,22 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+import VerdeaProdutoFrontal from "@/public/images/verdea-produto-1.png";
+import VerdeaProdutoDetalhado from "@/public/images/verdea-produto-2.png";
 import Esp32Model from "@/components/3dModel/Esp32Model";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 import { publicPageNavigation } from "@/lib/navigation";
 import { TypingAnimation } from "@/components/ui/typing-animation";
+import Image from "next/image";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Separator } from "@/components/ui/separator";
+import Autoplay from "embla-carousel-autoplay";
 
 const featuresCards = [
   {
@@ -118,6 +133,97 @@ export default function Home() {
               <span className="text-white text-sm mb-2">Saiba mais</span>
               <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
                 <div className="w-1 h-3 bg-white rounded-full mt-2 animate-bounce"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="grid grid-cols-1 gap-12 place-items-center py-15 px-6 lg:grid-cols-2 lg:px-12">
+          <Carousel
+            opts={{
+              loop: true,
+            }}
+            plugins={[
+              Autoplay({
+                delay: 4000,
+                stopOnInteraction: false
+              }),
+            ]}
+            className="w-full"
+          >
+            <CarouselContent>
+              <CarouselItem className="max-w-[600px] mx-auto">
+                <AspectRatio ratio={1} className="bg-muted rounded-lg">
+                  <Image
+                    src={VerdeaProdutoFrontal}
+                    alt=""
+                    fill
+                    className="h-full w-full rounded-lg object-cover"
+                  />
+                </AspectRatio>
+              </CarouselItem>
+              <CarouselItem className="max-w-[600px] mx-auto">
+                <AspectRatio ratio={1} className="bg-muted rounded-lg">
+                  <Image
+                    src={VerdeaProdutoDetalhado}
+                    alt=""
+                    fill
+                    className="h-full w-full rounded-lg object-cover"
+                  />
+                </AspectRatio>
+              </CarouselItem>
+            </CarouselContent>
+          </Carousel>
+
+          <div>
+            <div className="space-y-3 pb-6">
+              <h2 className="text-3xl font-semibold">Design Elegante</h2>
+              <p className="md:text-xl text-muted-foreground">
+                O Verdea possui um design moderno e minimalista, com display LCD
+                integrado que exibe informações em tempo real da umidade do
+                solo. Perfeito para qualquer ambiente da sua casa.
+              </p>
+            </div>
+
+            <Separator />
+
+            <div className="flex flex-col gap-6 mt-6">
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-lg bg-primary/20 flex items-center justify-center">
+                  <Droplet className="size-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold">Irrigação Automática</p>
+                  <p className="text-muted-foreground">
+                    Rega suas plantas apenas quando necessário, economizando
+                    água.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-lg bg-primary/20 flex items-center justify-center">
+                  <Eye className="size-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold">Controle Remoto</p>
+                  <p className="text-muted-foreground">
+                    Monitore e controle suas plantas de qualquer lugar pela
+                    plataforma.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-lg bg-primary/20 flex items-center justify-center">
+                  <Leaf className="size-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-lg font-semibold">Sustentável</p>
+                  <p className="text-muted-foreground">
+                    Reduz desperdício de água e promove práticas ecológicas.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
