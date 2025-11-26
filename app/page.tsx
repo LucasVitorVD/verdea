@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/carousel";
 import VerdeaProdutoFrontal from "@/public/images/verdea-produto-1.png";
 import VerdeaProdutoDetalhado from "@/public/images/verdea-produto-2.png";
+import VerdeaProdutoInstalado from "@/public/images/verdea-produto-3.jpg";
 import Esp32Model from "@/components/3dModel/Esp32Model";
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
@@ -166,6 +167,16 @@ export default function Home() {
                 <AspectRatio ratio={1} className="bg-muted rounded-lg">
                   <Image
                     src={VerdeaProdutoDetalhado}
+                    alt=""
+                    fill
+                    className="h-full w-full rounded-lg object-cover"
+                  />
+                </AspectRatio>
+              </CarouselItem>
+              <CarouselItem className="max-w-[600px] mx-auto">
+                <AspectRatio ratio={1} className="bg-muted rounded-lg">
+                  <Image
+                    src={VerdeaProdutoInstalado}
                     alt=""
                     fill
                     className="h-full w-full rounded-lg object-cover"
