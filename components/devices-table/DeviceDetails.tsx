@@ -20,6 +20,7 @@ import EmptyState from "../empty-state";
 import GardeningIllustration from "@/public/images/illustrations/undraw_gardening.svg";
 import Link from "next/link";
 import { useDevices } from "@/hooks/useDevice";
+import { translateSpecies } from "@/lib/utils";
 
 interface Props {
   device: Device;
@@ -71,7 +72,7 @@ export default function DeviceDetails({ device }: Props) {
                     <div>
                       <p>{device.plantSummary.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {device.plantSummary.species}
+                        {translateSpecies(device.plantSummary.species)}
                       </p>
                     </div>
                   </div>
