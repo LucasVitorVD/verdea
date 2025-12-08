@@ -14,20 +14,19 @@ Verdea é uma plataforma completa para monitoramento e automação de irrigaçã
 Abaixo estão algumas das principais telas da aplicação.
 
 ### Landing Page
-*(Espaço para print da tela inicial/landing page)*
-`[IMAGE: Landing Page Screenshot]`
+<img width="1425" height="743" alt="image" src="https://github.com/user-attachments/assets/31909277-6924-445f-aeb0-18ffcac27e3a" />
 
 ### Dashboard do Usuário
-*(Espaço para print do painel principal do usuário)*
-`[IMAGE: Dashboard Screenshot]`
+<img width="1425" height="739" alt="image" src="https://github.com/user-attachments/assets/f14ba7cf-e7d9-4463-95c6-d7483ff419fb" />
 
 ### Gerenciamento de Dispositivos
-*(Espaço para print da tela de gerenciamento de dispositivos)*
-`[IMAGE: Device Management Screenshot]`
+<img width="1439" height="732" alt="image" src="https://github.com/user-attachments/assets/0797d224-2180-4fb4-94c4-930357e00f5c" />
+
+### Gerenciamento de Plantas
+<img width="1439" height="734" alt="image" src="https://github.com/user-attachments/assets/50d2a0cf-9285-4b4b-a002-425b1c65397c" />
 
 ### Histórico de Irrigação
-*(Espaço para print da tela de histórico)*
-`[IMAGE: Irrigation History Screenshot]`
+<img width="1439" height="734" alt="image" src="https://github.com/user-attachments/assets/1e375375-3df1-4779-8fba-5a595c5a2b97" />
 
 ---
 
