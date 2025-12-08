@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <img src="public/images/logo-verdea.png" alt="Verdea Logo" width="200"/>
+  <h1>Verdea - Sistema de Irrigação Inteligente</h1>
+</div>
 
-## Getting Started
+## 📖 Sobre
 
-First, run the development server:
+Verdea é uma plataforma completa para monitoramento e automação de irrigação. Com ela, usuários podem cuidar de suas plantas de forma eficiente e remota, garantindo que recebam a quantidade de água ideal, economizando recursos e otimizando o crescimento.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📸 Telas do Sistema
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Abaixo estão algumas das principais telas da aplicação.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Landing Page
+*(Espaço para print da tela inicial/landing page)*
+`[IMAGE: Landing Page Screenshot]`
 
-## Learn More
+### Dashboard do Usuário
+*(Espaço para print do painel principal do usuário)*
+`[IMAGE: Dashboard Screenshot]`
 
-To learn more about Next.js, take a look at the following resources:
+### Gerenciamento de Dispositivos
+*(Espaço para print da tela de gerenciamento de dispositivos)*
+`[IMAGE: Device Management Screenshot]`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Histórico de Irrigação
+*(Espaço para print da tela de histórico)*
+`[IMAGE: Irrigation History Screenshot]`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## ✨ Funcionalidades Principais
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+-   **Autenticação de Usuários:** Sistema seguro de login e cadastro.
+-   **Dashboard Interativo:** Visualize estatísticas de umidade, temperatura e irrigações recentes.
+-   **Gerenciamento de Dispositivos:** Adicione, configure e monitore seus dispositivos ESP32.
+-   **Controle de Plantas:** Cadastre suas plantas e associe-as a dispositivos específicos.
+-   **Histórico Detalhado:** Acompanhe todo o histórico de irrigações realizadas.
+-   **Painel Administrativo:** Gerencie usuários, dispositivos e plantas de toda a plataforma.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+Este projeto foi construído utilizando as seguintes tecnologias:
+
+-   **Frontend:**
+    -   [Next.js](https://nextjs.org/) (com App Router)
+    -   [React](https://react.dev/)
+    -   [TypeScript](https://www.typescriptlang.org/)
+    -   [Tailwind CSS](https://tailwindcss.com/)
+    -   [Shadcn/UI](https://ui.shadcn.com/) - Componentes de UI
+    -   [Tanstack Query](https://tanstack.com/query) - Gerenciamento de estado de servidor
+    -   [Recharts](https://recharts.org/) - Gráficos
+-   **Qualidade de Código:**
+    -   [ESLint](https://eslint.org/)
+-   **Deploy:**
+    -   [Vercel](https://vercel.com/)
+
+---
+
+## 🚀 Como Começar
+
+Siga os passos abaixo para executar o projeto em seu ambiente local.
+
+### Pré-requisitos
+
+-   [Node.js](https://nodejs.org/en) (versão 20.x ou superior)
+-   [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+
+### Instalação
+
+1.  **Clone o repositório:**
+    ```bash
+    git clone https://github.com/seu-usuario/seu-repositorio.git
+    cd seu-repositorio
+    ```
+
+2.  **Instale as dependências:**
+    ```bash
+    npm install
+    ```
+
+3.  **Backend (API):**
+    Para o funcionamento completo do projeto, é necessário configurar o backend. Visite o repositório da API em [https://github.com/LucasVitorVD/api-verdea](https://github.com/LucasVitorVD/api-verdea) e siga a documentação para configurá-lo.
+
+4.  **Configure as variáveis de ambiente:**
+    Crie um arquivo chamado `.env.local` na raiz do projeto e adicione as variáveis necessárias. Use o arquivo `.env.example` (se existir) como referência.
+
+3.  **Configure as variáveis de ambiente:**
+    Crie um arquivo chamado `.env.local` na raiz do projeto e adicione as variáveis necessárias. Use o arquivo `.env.example` (se existir) como referência.
+    ```env
+    # Exemplo
+    NEXT_PUBLIC_API_URL=http://localhost:3000/api
+    ```
+
+4.  **Execute o servidor de desenvolvimento:**
+    ```bash
+    npm run dev
+    ```
+
+5.  Abra [http://localhost:3000](http://localhost:3000) no seu navegador para ver o resultado.
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
